@@ -22,18 +22,13 @@ if (process.env.NODE_ENV === "development") {
   app.use(cors(process.env.CLIENT_URL));
 }
 
-// Merge typeDefs
+// Merge typeDefs and resolvers
 const typeDefs = mergeTypeDefs(
   loadFilesSync(path.join(__dirname, "graphql", "typeDefs"))
 );
-
-// Resolvers
-const resolvers = {
-  Query: {
-    totalPosts: () => 41,
-    me: () => "Denny Hong",
-  },
-};
+const resolvers = mergeResolvers(
+  loadFilesSync(path.join(__dirname, "graphql", "resolvers"))
+);
 
 // Create Apollo Server
 const apolloServer = new ApolloServer({
