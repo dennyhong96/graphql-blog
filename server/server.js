@@ -1,8 +1,14 @@
 require("dotenv").config({ path: "./config/config.env" });
-
+const path = require("path");
 const express = require("express");
 const http = require("http");
 const { ApolloServer } = require("apollo-server-express");
+const {
+  makeExecutableSchema,
+  mergeTypeDefs,
+  mergeResolvers,
+  loadFilesSync,
+} = require("graphql-tools");
 
 const morgan = require("morgan");
 const cors = require("cors");
@@ -16,17 +22,16 @@ if (process.env.NODE_ENV === "development") {
   app.use(cors(process.env.CLIENT_URL));
 }
 
-// Query, Mutation, Subscription types
-const typeDefs = `
-  type Query {
-    totalPosts: Int!
-  }
-`;
+// Merge typeDefs
+const typeDefs = mergeTypeDefs(
+  loadFilesSync(path.join(__dirname, "graphql", "typeDefs"))
+);
 
 // Resolvers
 const resolvers = {
   Query: {
-    totalPosts: () => 42,
+    totalPosts: () => 41,
+    me: () => "Denny Hong",
   },
 };
 
@@ -55,3 +60,18 @@ app.listen(port, () => {
     `GraphQL server is up at http://localhost:${port}${apolloServer.graphqlPath}...`
   );
 });
+
+/*
+
+// imports
+const { makeExecutableSchema } = require("graphql-tools")
+const { mergeTypeDefs, mergeResolvers } = require("@graphql-tools/merge")
+const { loadFilesSync } = require("@graphql-tools/load-files")
+
+// usage
+const typeDefs = mergeTypeDefs(loadFilesSync(path.join(__dirname, "./schema")));
+const resolvers = mergeResolvers(
+  loadFilesSync(path.join(__dirname, "./resolvers"))
+);
+
+*/
