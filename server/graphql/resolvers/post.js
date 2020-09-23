@@ -1,5 +1,7 @@
+const totalPosts = () => 42;
+
 module.exports = {
   Query: {
-    totalPosts: () => 42,
+    totalPosts,
   },
 };

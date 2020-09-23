@@ -1,7 +1,7 @@
 require("dotenv").config({ path: "./config/config.env" });
 const path = require("path");
+// const http = require("http");
 const express = require("express");
-const http = require("http");
 const { ApolloServer } = require("apollo-server-express");
 const {
   makeExecutableSchema,
@@ -9,11 +9,13 @@ const {
   mergeResolvers,
   loadFilesSync,
 } = require("graphql-tools");
-
 const morgan = require("morgan");
 const cors = require("cors");
 
+const connectDB = require("./config/db");
+
 const app = express();
+connectDB();
 
 // Middlewares
 app.use(morgan("dev"));
@@ -42,11 +44,7 @@ apolloServer.applyMiddleware({
 });
 
 // Create a server for rest endpoints
-const httpServer = http.createServer(app);
-
-app.get("/", (req, res) => {
-  res.send("Hello");
-});
+// const httpServer = http.createServer(app);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
@@ -55,18 +53,3 @@ app.listen(port, () => {
     `GraphQL server is up at http://localhost:${port}${apolloServer.graphqlPath}...`
   );
 });
-
-/*
-
-// imports
-const { makeExecutableSchema } = require("graphql-tools")
-const { mergeTypeDefs, mergeResolvers } = require("@graphql-tools/merge")
-const { loadFilesSync } = require("@graphql-tools/load-files")
-
-// usage
-const typeDefs = mergeTypeDefs(loadFilesSync(path.join(__dirname, "./schema")));
-const resolvers = mergeResolvers(
-  loadFilesSync(path.join(__dirname, "./resolvers"))
-);
-
-*/
