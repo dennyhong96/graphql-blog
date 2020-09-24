@@ -32,44 +32,42 @@ const CompleteRegister = () => {
     try {
       // Try sign in with email and password
       const { user } = await auth.signInWithEmailAndPassword(email, password);
-      const { token } = await user.getIdTokenResult();
-      dispatch({
-        type: "USER_AUTHENTICATED",
-        payload: { email: user.email, token },
-      });
-
-      // TODO: Update user information to DB
-
-      toast.success("Sign in success.");
-
-      // Redirect user back to homepage
-      history.push("/");
+      await authenticateUser(user);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleGoogleSignin = async () => {
+    setLoading(true);
     try {
+      // Try sign in with google
       const { user } = await auth.signInWithPopup(googleAuthProvider);
-      const { token } = await user.getIdTokenResult();
-
-      dispatch({
-        type: "USER_AUTHENTICATED",
-        payload: { email: user.email, token },
-      });
-
-      // TODO: Update user information to DB
-
-      toast.success("Sign in success.");
-
-      // Redirect user back to homepage
-      history.push("/");
+      await authenticateUser(user);
     } catch (error) {
       console.error(error);
+      toast.error(error.message);
+      setLoading(false);
     }
+  };
+
+  const authenticateUser = async (user) => {
+    const { token } = await user.getIdTokenResult();
+
+    dispatch({
+      type: "USER_AUTHENTICATED",
+      payload: { email: user.email, token },
+    });
+
+    // TODO: Update user information to DB
+
+    toast.success("Sign in success.");
+    setLoading(false);
+
+    // Redirect user back to homepage
+    history.push("/");
   };
 
   return (
@@ -90,6 +88,7 @@ const CompleteRegister = () => {
                 onChange={(evt) => setEmail(evt.target.value)}
                 style={{ marginBottom: "1rem" }}
                 inputProps={{ type: "email" }}
+                disabled={loading}
               />
               <TextField
                 id="complete-password"
@@ -99,6 +98,7 @@ const CompleteRegister = () => {
                 onChange={(evt) => setPassword(evt.target.value)}
                 style={{ marginBottom: "1rem" }}
                 inputProps={{ type: "password" }}
+                disabled={loading}
               />
               <Button
                 color="primary"
