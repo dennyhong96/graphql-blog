@@ -1,3 +1,5 @@
+const auth = require("../../middlewares/auth");
+
 const POSTS = [
   {
     id: 1,
@@ -19,9 +21,23 @@ const POSTS = [
   },
 ];
 
-const totalPosts = () => POSTS.length;
+const totalPosts = async (_, args, { req, res }) => {
+  try {
+    await auth(req, res);
+    return POSTS.length;
+  } catch (error) {
+    throw error;
+  }
+};
 
-const listPosts = () => POSTS;
+const listPosts = async (_, args, { req, res }) => {
+  try {
+    await auth(req, res);
+    return POSTS;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const createPost = (_, { input }, ctx) => {
   const id = POSTS.map((p) => p.id).sort((a, b) => a - b)[POSTS.length - 1] + 1;
