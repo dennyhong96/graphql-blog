@@ -1,7 +1,6 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment } from "react";
 import { useQuery, gql } from "@apollo/client";
 
-import { AuthContext } from "../context/authContext";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -19,11 +18,12 @@ const POSTS = gql`
 `;
 
 const Home = () => {
-  const { state, dispatch } = useContext(AuthContext);
-
   const { loading, error, data } = useQuery(POSTS);
 
-  console.error(error);
+  if (error) {
+    console.log(error.message);
+    return <p>{error.message}</p>;
+  }
 
   return (
     <Fragment>

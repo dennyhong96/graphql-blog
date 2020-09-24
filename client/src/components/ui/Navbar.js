@@ -1,8 +1,6 @@
 import React, { useState, useContext, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, fade } from "@material-ui/core/styles";
-import { auth } from "../../services/firebase";
-import { AuthContext } from "../../context/authContext";
 import { useHistory } from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -18,6 +16,10 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+
+import { auth } from "../../services/firebase";
+import { AuthContext } from "../../context/authContext";
+import client from "../../apollo/client";
 
 const Navabr = () => {
   const classes = useStyles();
@@ -39,6 +41,7 @@ const Navabr = () => {
     handleClose();
 
     localStorage.removeItem("AUTH_TOKEN");
+    await client.resetStore();
     dispatch({ type: "USER_LOGGED_OUT" });
     history.push("/login");
   };
