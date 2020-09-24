@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
 import { makeStyles, fade } from "@material-ui/core/styles";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -30,7 +30,12 @@ const Navabr = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
+            <Typography
+              component={Link}
+              to="/"
+              variant="h6"
+              className={classes.title}
+            >
               News
             </Typography>
             <div className={classes.search}>
@@ -48,6 +53,7 @@ const Navabr = () => {
                 onChange={(evt) => setSearchText(evt.target.value)}
               />
             </div>
+            <Button color="inherit">Search</Button>
             <Button component={Link} to="/login" color="inherit">
               Login
             </Button>
@@ -73,6 +79,8 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    color: "inherit",
+    textDecoration: "none",
   },
   toolBar: {
     padding: 0,
