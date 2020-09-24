@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useMutation, gql } from "@apollo/client";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -14,8 +15,18 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { AuthContext } from "../../context/authContext";
 import { auth } from "../../services/firebase";
 
+const CreateUser = gql`
+  mutation CreateUser {
+    createUser {
+      username
+      email
+    }
+  }
+`;
+
 const CompleteRegister = () => {
   const history = useHistory();
+  const [createUser] = useMutation(CreateUser);
   const { state, dispatch } = useContext(AuthContext);
   const [email] = useState(localStorage.getItem("REGISTER_EMAIL") || "");
   const [password, setPassword] = useState("");
@@ -58,11 +69,13 @@ const CompleteRegister = () => {
           payload: { email: user.email, token },
         });
 
-        // TODO: save user into DB
+        // Save user into DB
+        await createUser();
 
         toast.success("Your registration was successful!");
 
         // Redirect user
+        setLoading(false);
         return history.push("/");
       }
 
@@ -71,8 +84,8 @@ const CompleteRegister = () => {
     } catch (error) {
       console.error(error);
       toast.error(error.message);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

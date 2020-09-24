@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useMutation, gql } from "@apollo/client";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -16,8 +17,18 @@ import { AuthContext } from "../../context/authContext";
 import { auth, googleAuthProvider } from "../../services/firebase";
 import GoogleIcon from "../../assets/icons/google.png";
 
-const CompleteRegister = () => {
+const CreateUser = gql`
+  mutation CreateUser {
+    createUser {
+      username
+      email
+    }
+  }
+`;
+
+const Login = () => {
   const history = useHistory();
+  const [createUser] = useMutation(CreateUser);
   const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,7 +73,8 @@ const CompleteRegister = () => {
       payload: { email: user.email, token },
     });
 
-    // TODO: Update user information to DB
+    // Save user info to DB if not already in DB
+    await createUser();
 
     toast.success("Sign in success.");
     setLoading(false);
@@ -79,7 +91,7 @@ const CompleteRegister = () => {
           <CardContent>
             <Box component="form" onSubmit={handleLogin}>
               <Typography variant="h6" align="center" gutterBottom>
-                Set a password
+                Log in
               </Typography>
               <TextField
                 id="complete-email"
@@ -131,4 +143,4 @@ const CompleteRegister = () => {
   );
 };
 
-export default CompleteRegister;
+export default Login;

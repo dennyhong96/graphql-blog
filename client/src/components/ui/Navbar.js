@@ -37,13 +37,18 @@ const Navabr = () => {
   };
 
   const handleLogout = async () => {
-    await auth.signOut();
-    handleClose();
+    try {
+      await auth.signOut();
+      handleClose();
 
-    localStorage.removeItem("AUTH_TOKEN");
-    await client.resetStore();
-    dispatch({ type: "USER_LOGGED_OUT" });
-    history.push("/login");
+      localStorage.removeItem("AUTH_TOKEN");
+      await client.resetStore();
+      dispatch({ type: "USER_LOGGED_OUT" });
+      history.push("/login");
+    } catch (error) {
+      console.error("LOGOUT ERROR", error);
+      dispatch({ type: "AUTH_ERROR" });
+    }
   };
 
   return (
