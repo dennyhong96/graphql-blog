@@ -15,11 +15,6 @@ module.exports = gql`
   }
 
   # CreateUser
-  input CreateUserInput {
-    username: String!
-    email: String!
-  }
-
   type CreateUserResponse {
     username: String!
     email: String!
@@ -30,6 +25,6 @@ module.exports = gql`
   }
 
   type Mutation {
-    createUser(input: CreateUserInput!): CreateUserResponse!
+    createUser: CreateUserResponse!
   }
 `;

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const shortId = require("shortid");
 
 const userSchema = new mongoose.Schema(
   {
@@ -24,6 +25,12 @@ const userSchema = new mongoose.Schema(
         {
           url: String,
           public_id: String,
+        },
+      ],
+      default: [
+        {
+          url: "https://via.placeholder.com/200x200?text=Profile",
+          public_id: shortId.generate(),
         },
       ],
     },
