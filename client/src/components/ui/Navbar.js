@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, fade } from "@material-ui/core/styles";
+import { auth } from "../../services/firebase";
+import { AuthContext } from "../../context/authContext";
+import { useHistory } from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -8,14 +11,35 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import InputBase from "@material-ui/core/InputBase";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 
 const Navabr = () => {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [searchText, setSearchText] = useState("");
+  const { state, dispatch } = useContext(AuthContext);
+  const history = useHistory();
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    handleClose();
+    dispatch({ type: "USER_LOGGED_OUT" });
+    history.push("/login");
+  };
 
   return (
     <div className={classes.root}>
@@ -54,12 +78,46 @@ const Navabr = () => {
               />
             </div>
             <Button color="inherit">Search</Button>
-            <Button component={Link} to="/login" color="inherit">
-              Login
-            </Button>
-            <Button component={Link} to="/register" color="inherit">
-              Register
-            </Button>
+
+            {state.user ? (
+              <Fragment>
+                <Button component={Link} to="/login" color="inherit">
+                  Login
+                </Button>
+                <Button component={Link} to="/register" color="inherit">
+                  Register
+                </Button>
+              </Fragment>
+            ) : (
+              <div>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={!!anchorEl}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </div>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
