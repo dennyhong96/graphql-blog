@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Route } from "react-router-dom";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
-import "./RouteWithProgress.scss";
+import "./RouteWithProgress.css";
 
 const ProgressRoute = (props) => {
   useState(nprogress.start());

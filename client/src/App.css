@@ -1,0 +1,4 @@
+.Toastify__toast-body {
+  /* Overwrite default toast font */
+  font-family: "Ubuntu", sans-serif !important;
+}
