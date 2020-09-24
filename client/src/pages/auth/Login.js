@@ -10,9 +10,11 @@ import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import IconButton from "@material-ui/core/IconButton";
 
 import { AuthContext } from "../../context/authContext";
-import { auth } from "../../services/firebase";
+import { auth, googleAuthProvider } from "../../services/firebase";
+import GoogleIcon from "../../assets/icons/google.png";
 
 const CompleteRegister = () => {
   const history = useHistory();
@@ -47,6 +49,27 @@ const CompleteRegister = () => {
       toast.error(error.message);
     }
     setLoading(false);
+  };
+
+  const handleGoogleSignin = async () => {
+    try {
+      const { user } = await auth.signInWithPopup(googleAuthProvider);
+      const { token } = await user.getIdTokenResult();
+
+      dispatch({
+        type: "USER_AUTHENTICATED",
+        payload: { email: user.email, token },
+      });
+
+      // TODO: Update user information to DB
+
+      toast.success("Sign in success.");
+
+      // Redirect user back to homepage
+      history.push("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -92,6 +115,12 @@ const CompleteRegister = () => {
                   "Log in"
                 )}
               </Button>
+              <IconButton
+                onClick={handleGoogleSignin}
+                style={{ marginTop: "0.5rem", padding: "0.25rem" }}
+              >
+                <img src={GoogleIcon} alt="Sign in with google" width={30} />
+              </IconButton>
             </Box>
           </CardContent>
         </Card>
