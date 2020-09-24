@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 const firebaseReducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
-    case "LOGGED_IN_USER":
+    case "USER_AUTHENTICATED":
       return { ...state, user: payload };
     default:
       return state;

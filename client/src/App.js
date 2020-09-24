@@ -10,6 +10,7 @@ import Navbar from "./components/ui/Navbar";
 import Home from "./pages/Home";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
+import CompleteRegister from "./pages/auth/CompleteRegister";
 import "./App.css";
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
+          <Route path="/complete-register" component={CompleteRegister} />
         </Switch>
       </Container>
       <ToastContainer />

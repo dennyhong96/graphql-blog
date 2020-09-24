@@ -45,12 +45,12 @@ const Register = () => {
     <Grid container>
       <Grid item xs />
       <Grid item xs>
-        <Card style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
+        <Card style={{ padding: "1rem" }}>
           <CardContent>
-            <Typography variant="h6" align="center">
+            <Typography variant="h6" align="center" gutterBottom>
               Register Account
             </Typography>
-            <Box component="form">
+            <Box component="form" onSubmit={handleSubmit}>
               <TextField
                 id="register-email"
                 label="Enter your email address"
@@ -64,8 +64,8 @@ const Register = () => {
                 color="primary"
                 variant="contained"
                 disabled={!email || !!loading}
-                onClick={handleSubmit}
                 fullWidth
+                type="submit"
               >
                 {loading ? (
                   <CircularProgress
