@@ -79,7 +79,7 @@ const Navabr = () => {
             </div>
             <Button color="inherit">Search</Button>
 
-            {state.user ? (
+            {!state.user ? (
               <Fragment>
                 <Button component={Link} to="/login" color="inherit">
                   Login
