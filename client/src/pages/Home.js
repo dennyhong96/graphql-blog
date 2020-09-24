@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext } from "react";
 import { useQuery, gql } from "@apollo/client";
 
 import { AuthContext } from "../context/authContext";
