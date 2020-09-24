@@ -50,14 +50,16 @@ const CompleteRegister = () => {
         await user.updatePassword(password);
 
         // Store user into auth context
-        const idTokenResult = await user.getIdTokenResult();
-        console.log({ idTokenResult });
+        const { token } = await user.getIdTokenResult();
+
         dispatch({
           type: "USER_AUTHENTICATED",
-          payload: { email: user.email, token: idTokenResult },
+          payload: { email: user.email, token },
         });
 
         // TODO: save user into DB
+
+        toast.success("Your registration was successful!");
 
         // Redirect user
         return history.push("/");
