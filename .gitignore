@@ -4,3 +4,5 @@ node_modules
 firebase.js
 
 firebase-admin-service-key.json
+
+.DS_Store

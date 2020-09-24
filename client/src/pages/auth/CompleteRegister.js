@@ -52,6 +52,7 @@ const CompleteRegister = () => {
         // Store user into auth context
         const { token } = await user.getIdTokenResult();
 
+        localStorage.setItem("AUTH_TOKEN", token);
         dispatch({
           type: "USER_AUTHENTICATED",
           payload: { email: user.email, token },

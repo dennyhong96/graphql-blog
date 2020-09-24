@@ -37,6 +37,8 @@ const Navabr = () => {
   const handleLogout = async () => {
     await auth.signOut();
     handleClose();
+
+    localStorage.removeItem("AUTH_TOKEN");
     dispatch({ type: "USER_LOGGED_OUT" });
     history.push("/login");
   };

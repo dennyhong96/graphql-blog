@@ -19,15 +19,11 @@ const POSTS = gql`
 `;
 
 const Home = () => {
-  const { loading, error, data } = useQuery(POSTS);
   const { state, dispatch } = useContext(AuthContext);
 
-  const handleClick = () => {
-    dispatch({
-      type: "LOGGED_IN_USER",
-      payload: "Denny",
-    });
-  };
+  const { loading, error, data } = useQuery(POSTS);
+
+  console.error(error);
 
   return (
     <Fragment>
@@ -60,8 +56,6 @@ const Home = () => {
             </Grid>
           ))}
       </Grid>
-      {JSON.stringify(state)}
-      <button onClick={handleClick}>click</button>
     </Fragment>
   );
 };
