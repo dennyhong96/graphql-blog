@@ -106,6 +106,7 @@ const Navabr = () => {
                   aria-haspopup="true"
                   onClick={handleMenu}
                   color="inherit"
+                  edge="end"
                 >
                   <AccountCircle />
                 </IconButton>
@@ -127,7 +128,7 @@ const Navabr = () => {
                   <MenuItem
                     component={Link}
                     onClick={handleClose}
-                    to="/dashboard/main"
+                    to="/dashboard/profile"
                   >
                     Dashboard
                   </MenuItem>

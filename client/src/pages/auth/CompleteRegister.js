@@ -27,7 +27,7 @@ const CreateUser = gql`
 const CompleteRegister = () => {
   const history = useHistory();
   const [createUser] = useMutation(CreateUser);
-  const { state, dispatch } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext);
   const [email] = useState(localStorage.getItem("REGISTER_EMAIL") || "");
   const [password, setPassword] = useState("");
   const [emailLink, setEmailLink] = useState(null);
@@ -76,7 +76,7 @@ const CompleteRegister = () => {
 
         // Redirect user
         setLoading(false);
-        return history.push("/");
+        return history.push("/dashboard/profile");
       }
 
       // User's email is not verified.

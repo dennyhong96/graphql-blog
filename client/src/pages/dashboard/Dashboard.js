@@ -6,12 +6,13 @@ import Grid from "@material-ui/core/Grid";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
-import PrivateRoute from "../components/routes/PrivateRoute";
+import Profile from "./Profile";
+import Password from "./Password";
+import PrivateRoute from "../../components/routes/PrivateRoute";
 
 const SUBPATHS = [
-  { pathname: "/dashboard/main", label: "Dashboard" },
-  { pathname: "/dashboard/create", label: "create" },
-  { pathname: "/dashboard/delete", label: "delete" },
+  { pathname: "/dashboard/profile", label: "Dashboard", component: Profile },
+  { pathname: "/dashboard/create", label: "create", component: Password },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +53,7 @@ const Dashboard = () => {
               key={path.pathname}
               exact
               path={path.pathname}
-              component={() => <h1>{path.label}</h1>}
+              component={path.component}
             />
           ))}
         </Switch>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import "../components/routes/Route.css";

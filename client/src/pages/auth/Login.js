@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useMutation, gql } from "@apollo/client";
 
@@ -80,14 +80,14 @@ const Login = () => {
     setLoading(false);
 
     // Redirect user back to homepage
-    history.push("/");
+    history.push("/dashboard/profile");
   };
 
   return (
     <Grid container>
       <Grid item xs />
       <Grid item xs>
-        <Card style={{ padding: "1rem" }}>
+        <Card style={{ padding: "1rem" }} elevation={3}>
           <CardContent>
             <Box component="form" onSubmit={handleLogin}>
               <Typography variant="h6" align="center" gutterBottom>
@@ -135,6 +135,16 @@ const Login = () => {
                 <img src={GoogleIcon} alt="Sign in with google" width={30} />
               </IconButton>
             </Box>
+            <Typography
+              variant="caption"
+              style={{ display: "block", marginTop: "0.5rem" }}
+            >
+              Don't own an account? <Link to="/register">Sign up.</Link>
+            </Typography>
+            <Typography variant="caption" color="textPrimary">
+              Forgot password?{" "}
+              <Link to="/password-forget">Reset password.</Link>
+            </Typography>
           </CardContent>
         </Card>
       </Grid>

@@ -32,8 +32,8 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const { token } = await user.getIdTokenResult();
-
         localStorage.setItem("AUTH_TOKEN", token);
+
         dispatch({
           type: "USER_AUTHENTICATED",
           payload: { email: user.email, token },
