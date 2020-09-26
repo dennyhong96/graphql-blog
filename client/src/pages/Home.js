@@ -47,7 +47,7 @@ const Home = () => {
           data &&
           data.listPosts.map((post) => (
             <Grid item key={post.id} xs={4}>
-              <Card>
+              <Card elevation={3}>
                 <CardContent>
                   <Typography>{post.title}</Typography>
                   <Typography>{post.description}</Typography>

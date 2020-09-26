@@ -70,7 +70,7 @@ const Navabr = () => {
               variant="h6"
               className={classes.title}
             >
-              News
+              GraphQL
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -124,6 +124,13 @@ const Navabr = () => {
                   open={!!anchorEl}
                   onClose={handleClose}
                 >
+                  <MenuItem
+                    component={Link}
+                    onClick={handleClose}
+                    to="/dashboard/main"
+                  >
+                    Dashboard
+                  </MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </div>

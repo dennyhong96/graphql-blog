@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Route } from "react-router-dom";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
-import "./RouteWithProgress.css";
+import "../components/routes/Route.css";
 
-const ProgressRoute = (props) => {
+const useNProgress = () => {
   useState(nprogress.start());
 
   useEffect(() => {
     nprogress.done();
     return () => nprogress.start();
   });
-
-  return <Route {...props} />;
+  return null;
 };
 
-export default ProgressRoute;
+export default useNProgress;

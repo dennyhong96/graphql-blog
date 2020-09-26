@@ -40,9 +40,7 @@ const apolloServer = new ApolloServer({
 });
 
 // applyMiddleware connects ApolloServer to Express app
-apolloServer.applyMiddleware({
-  app,
-});
+apolloServer.applyMiddleware({ app });
 
 // Create a server for rest endpoints
 // const httpServer = http.createServer(app);
