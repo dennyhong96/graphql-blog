@@ -1,4 +1,9 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  ApolloLink,
+} from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
@@ -17,7 +22,24 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+// To remove __typename in mutations
+// https://github.com/apollographql/apollo-feature-requests/issues/6#issuecomment-676886539
+const cleanTypeName = new ApolloLink((operation, forward) => {
+  if (operation.variables) {
+    const omitTypename = (key, value) =>
+      key === "__typename" ? undefined : value;
+    operation.variables = JSON.parse(
+      JSON.stringify(operation.variables),
+      omitTypename
+    );
+  }
+
+  return forward(operation).map((data) => {
+    return data;
+  });
+});
+
 export default new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: ApolloLink.from([cleanTypeName, authLink, httpLink]),
   cache: new InMemoryCache(),
 });

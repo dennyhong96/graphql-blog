@@ -11,14 +11,14 @@ import client from "./apollo/client";
 
 ReactDOM.render(
   <BrowserRouter>
-    <AuthProvider>
-      <ApolloProvider client={client}>
+    <ApolloProvider client={client}>
+      <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <App />
         </ThemeProvider>
-      </ApolloProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ApolloProvider>
   </BrowserRouter>,
   document.getElementById("root")
 );

@@ -2,3 +2,29 @@
   /* Overwrite default toast font */
   font-family: "Ubuntu", sans-serif !important;
 }
+
+/* Overwrite Mui-Dropzone Styles */
+.MuiDropzoneArea-root {
+  background-color: inherit !important;
+  min-height: initial !important;
+  border-width: 2px !important;
+  padding-bottom: 0.75rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.MuiTypography-h5 {
+  font-size: 1rem !important;
+  margin: 1rem 0 !important;
+}
+
+.MuiDropzoneArea-icon {
+  height: 1.5rem !important;
+  width: 1.5rem !important;
+}
+
+.MuiDropzonePreviewList-removeButton {
+  top: 5px !important;
+  right: 35px !important;
+  width: 35px !important;
+  height: 35px !important;
+}
