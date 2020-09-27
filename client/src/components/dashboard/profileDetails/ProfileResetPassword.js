@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 import { auth } from "../../../services/firebase.js";
-import Dialog from "../../../components/ui/Dialog";
+import Dialog from "../../ui/Dialog";
 
 const ProfileResetPassword = () => {
   const [open, setOpen] = useState(false);

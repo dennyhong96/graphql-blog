@@ -31,7 +31,7 @@ const Dashboard = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={3}>
+      <Grid item xs={12} sm={4} md={3}>
         <Tabs
           orientation="vertical"
           variant="scrollable"
@@ -50,7 +50,7 @@ const Dashboard = () => {
           ))}
         </Tabs>
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={12} sm={8} md={9}>
         <Switch>
           {SUBPATHS.map((path) => (
             <PrivateRoute

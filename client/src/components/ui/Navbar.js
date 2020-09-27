@@ -11,6 +11,7 @@ import Container from "@material-ui/core/Container";
 import InputBase from "@material-ui/core/InputBase";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Hidden from "@material-ui/core/Hidden";
 
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -57,17 +58,21 @@ const Navabr = () => {
       <AppBar position="fixed">
         <Container>
           <Toolbar className={classes.toolBar}>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton>
+            <Hidden smUp>
+              <IconButton
+                edge="start"
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="menu"
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
             <Typography
-              component={Link}
-              to="/"
+              component="a"
+              href="https://github.com/hyhong-code/graphql-blog-templates"
+              target="_blank"
+              rel="noopener noreferrer"
               variant="h6"
               className={classes.title}
             >
@@ -90,6 +95,10 @@ const Navabr = () => {
               />
             </div>
             <Button color="inherit">Search</Button>
+
+            <Button component={Link} to="/" color="inherit">
+              Home
+            </Button>
 
             {!state.user ? (
               <Fragment>
