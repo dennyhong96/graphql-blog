@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import { auth } from "../../services/firebase.js";
-import Dialog from "../../components/ui/Dialog";
+import { auth } from "../../../services/firebase.js";
+import Dialog from "../../../components/ui/Dialog";
 
 const ProfileResetPassword = () => {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,11 @@ const ProfileResetPassword = () => {
 
   return (
     <Fragment>
-      <Button variant="contained" onClick={setOpen.bind(this, true)}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={setOpen.bind(this, true)}
+      >
         Reset Password
       </Button>
       <Dialog

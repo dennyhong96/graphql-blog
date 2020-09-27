@@ -7,12 +7,16 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import Profile from "./Profile";
-import Password from "./Password";
+import CreatePost from "./CreatePost";
 import PrivateRoute from "../../components/routes/PrivateRoute";
 
 const SUBPATHS = [
   { pathname: "/dashboard/profile", label: "Dashboard", component: Profile },
-  { pathname: "/dashboard/create", label: "create", component: Password },
+  {
+    pathname: "/dashboard/create",
+    label: "Create Post",
+    component: CreatePost,
+  },
 ];
 
 const useStyles = makeStyles((theme) => ({
