@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const shortId = require("shortid");
 
 const userSchema = new mongoose.Schema(
   {

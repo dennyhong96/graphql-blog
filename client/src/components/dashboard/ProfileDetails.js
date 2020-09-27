@@ -1,15 +1,19 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { DropzoneArea } from "material-ui-dropzone";
 import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";
 import axios from "axios";
+import { makeStyles } from "@material-ui/core";
 
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import { GetUser } from "../../apollo/queries/auth";
 import { UpdateUser } from "../../apollo/mutations/auth";
@@ -38,11 +42,43 @@ const resizeFile = (file) =>
     );
   });
 
+const useStyles = makeStyles((theme) => ({
+  images: { marginBottom: "1rem", display: "flex", flexWrap: "wrap" },
+  image: {
+    position: "relative",
+    "&:hover": {
+      "& .MuiIconButton-root": {
+        opacity: 1,
+        transition: "all 0.2s ease",
+      },
+    },
+  },
+  deleteBtn: {
+    opacity: 0,
+    transition: "all 0.2s ease",
+    position: "absolute",
+    right: 10,
+    top: 2,
+    backgroundColor: "#e0e0e0",
+    padding: "0.25rem",
+    boxShadow: "0 3px 7px rgb(0,0,0,0.075)",
+    "&:hover": {
+      backgroundColor: "#eeeeee",
+    },
+  },
+  deleteIcon: {
+    width: 20,
+    height: 20,
+  },
+}));
+
 const ProfileDetails = () => {
   const [formData, setFormData] = useState(INITIAL_STATE);
   const { username, name, about, email, images } = formData;
   const [imageFiles, setImageFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showDropZone, setShowDropZone] = useState(true);
+  const classes = useStyles();
 
   const { data } = useQuery(GetUser);
   const [updateUser] = useMutation(UpdateUser, {
@@ -65,6 +101,14 @@ const ProfileDetails = () => {
       images: user.images,
     });
   };
+
+  // Reset dropzone after adding or deleting images
+  useEffect(() => {
+    setShowDropZone(false);
+    setTimeout(() => {
+      setShowDropZone(true);
+    }, 1);
+  }, [images.length]);
 
   useMemo(() => {
     if (data?.getUser) {
@@ -106,13 +150,38 @@ const ProfileDetails = () => {
       toast.success("Profile successfully updated.");
     } catch (error) {
       console.error("PROFILE UPDATE ERROR", error);
-      toast.error(error);
+      toast.error(error.messag || error.response.data.message);
     }
     setLoading(false);
   };
 
   const handleFiles = (files) => {
     setImageFiles(files);
+  };
+
+  const handleDelete = async (image) => {
+    setLoading(true);
+    try {
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/v1/images/profiles`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("AUTH_TOKEN")}`,
+          },
+          params: { imageKey: image.key },
+        }
+      );
+      setFormData((prev) => ({
+        ...prev,
+        images: prev.images.filter((i) => i.key !== image.key),
+      }));
+      setImageFiles([]);
+      toast.success(res.data.data.message);
+    } catch (error) {
+      console.error("PROFILE UPDATE ERROR", error);
+      toast.error(error.response.data.message);
+    }
+    setLoading(false);
   };
 
   return (
@@ -164,29 +233,56 @@ const ProfileDetails = () => {
         disabled={loading}
         multiline
       />
-      <Box style={{ marginBottom: "1rem" }}>
+      <Box className={classes.images}>
         {images.map((i) => (
-          <img
-            src={i.url}
-            alt="User profile"
-            key={i.url}
-            style={{
-              borderRadius: 3,
-              objectFit: "cover",
-              height: 100,
-              width: 100,
-              marginRight: "0.5rem",
-            }}
-          />
+          <Box key={i.url} className={classes.image}>
+            {i.key && (
+              <IconButton
+                className={classes.deleteBtn}
+                onClick={() => handleDelete(i)}
+              >
+                <DeleteIcon className={classes.deleteIcon} />
+              </IconButton>
+            )}
+            <img
+              src={i.url}
+              alt="User profile"
+              style={{
+                borderRadius: 3,
+                objectFit: "cover",
+                height: 100,
+                width: 100,
+                marginRight: "0.5rem",
+              }}
+            />
+          </Box>
         ))}
       </Box>
-      <DropzoneArea
-        acceptedFiles={["image/*"]}
-        dropzoneText={"Click or Drag and drop images here"}
-        onChange={handleFiles}
-        showAlerts={false}
-        filesLimit={5}
-      />
+      {showDropZone ? (
+        <DropzoneArea
+          acceptedFiles={["image/*"]}
+          dropzoneText={
+            images.length >= 5
+              ? `You already have 5 images, delete some to add new ones.`
+              : `You have ${images.length} images, you can upload ${
+                  5 - images.length
+                } more.`
+          }
+          onChange={handleFiles}
+          inputProps={{ disabled: images.length >= 5 }}
+          filesLimit={5 - images.length}
+          clearOnUnmount
+        />
+      ) : (
+        <Box
+          style={{
+            height: "6.5rem",
+            border: "2px dashed #bdbdbd",
+            marginBottom: "1rem",
+          }}
+        />
+      )}
+
       <Button variant="contained" type="submit" disabled={loading}>
         {loading ? <CircularProgress size={24} /> : "Update"}
       </Button>

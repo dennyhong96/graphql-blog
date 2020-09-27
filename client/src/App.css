@@ -27,8 +27,7 @@
 
 /* Overwrite Mui-Dropzone Styles */
 .MuiDropzoneArea-root {
-  min-height: initial !important;
-  padding-bottom: 0.75rem !important;
+  min-height: 6.5rem !important;
   margin-bottom: 1rem !important;
   color: #424242 !important;
   background-color: inherit !important;
@@ -36,6 +35,10 @@
   border-width: 2px !important;
   border-radius: 0 !important;
   transition: all 0.2s ease !important;
+}
+
+.MuiDropzoneArea-root:focus {
+  outline: none;
 }
 
 .MuiDropzoneArea-root:hover {

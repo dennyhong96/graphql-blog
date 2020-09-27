@@ -20,9 +20,9 @@ connectDB();
 
 // Middlewares
 app.use(morgan("dev"));
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "10mb", type: "application/json" }));
 if (process.env.NODE_ENV === "development") {
-  app.use(cors(process.env.CLIENT_URL));
+  app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 }
 
 app.use("/api/v1/images", imageRouter);

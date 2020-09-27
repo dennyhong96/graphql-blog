@@ -1,6 +1,8 @@
 const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
 
+const User = require("../models/User");
+
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -48,8 +50,40 @@ exports.uploadProfileImages = async (req, res, next) => {
     });
   } catch (error) {
     console.error("[uploadProfileImages]", error);
-    res
-      .status(500)
-      .json({ errors: [{ msg: "Something went wrong, try again later." }] });
+    res.status(500).json({
+      message: "Something went wrong, try again later.",
+    });
+  }
+};
+
+exports.deleteProfileImage = async (req, res, next) => {
+  try {
+    const { imageKey } = req.query;
+
+    console.log(imageKey);
+
+    // Check if user owns the image
+    const user = await User.findOne({ "images.key": imageKey });
+    if (!user || user._id.toString() !== req.user._id.toString()) {
+      return res.status(500).json({ message: "Unauthorized action." });
+    }
+
+    // Delete image
+    const deleteParams = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: imageKey,
+    };
+    await s3.deleteObject(deleteParams).promise();
+
+    // Delete image record from DB
+    user.images = user.images.filter((image) => image.key !== imageKey);
+    await user.save();
+
+    res.status(200).json({ data: { message: "Delete success." } });
+  } catch (error) {
+    console.error("[deleteProfileImage]", error);
+    res.status(500).json({
+      message: "Something went wrong, try again later.",
+    });
   }
 };
