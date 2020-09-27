@@ -14,15 +14,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { AuthContext } from "../../context/authContext";
 import { auth } from "../../services/firebase";
-
-const CreateUser = gql`
-  mutation CreateUser {
-    createUser {
-      username
-      email
-    }
-  }
-`;
+import { CreateUser } from "../../apollo/mutations/auth";
 
 const CompleteRegister = () => {
   const history = useHistory();

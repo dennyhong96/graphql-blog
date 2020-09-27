@@ -16,15 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { AuthContext } from "../../context/authContext";
 import { auth, googleAuthProvider } from "../../services/firebase";
 import GoogleIcon from "../../assets/icons/google.png";
-
-const CreateUser = gql`
-  mutation CreateUser {
-    createUser {
-      username
-      email
-    }
-  }
-`;
+import { CreateUser } from "../../apollo/mutations/auth";
 
 const Login = () => {
   const history = useHistory();

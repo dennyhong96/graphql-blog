@@ -1,15 +1,45 @@
-.Toastify__toast-body {
-  /* Overwrite default toast font */
-  font-family: "Ubuntu", sans-serif !important;
+/* Overwrites React Toastify colors to match Material UI's palette */
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}
+
+.Toastify__toast--info {
+  background: #2196f3 !important;
+}
+
+.Toastify__toast--success {
+  background: #4caf50 !important;
+}
+
+.Toastify__toast--warning {
+  background: #ff9800 !important;
+}
+
+.Toastify__toast--error {
+  background: #f44336 !important;
+}
+
+/* Overwrites NProgress bar styles */
+#nprogress .bar {
+  background: #fff !important;
+  z-index: 99999 !important;
 }
 
 /* Overwrite Mui-Dropzone Styles */
 .MuiDropzoneArea-root {
-  background-color: inherit !important;
   min-height: initial !important;
-  border-width: 2px !important;
   padding-bottom: 0.75rem !important;
-  transition: all 0.3s ease !important;
+  margin-bottom: 1rem !important;
+  color: #424242 !important;
+  background-color: inherit !important;
+  border-color: #bdbdbd !important;
+  border-width: 2px !important;
+  border-radius: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+.MuiDropzoneArea-root:hover {
+  border-color: #424242 !important;
 }
 
 .MuiTypography-h5 {
@@ -18,6 +48,7 @@
 }
 
 .MuiDropzoneArea-icon {
+  color: #424242 !important;
   height: 1.5rem !important;
   width: 1.5rem !important;
 }

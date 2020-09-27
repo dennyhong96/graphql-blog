@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { DropzoneArea } from "material-ui-dropzone";
 import { toast } from "react-toastify";
 
@@ -8,41 +8,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-const GetUser = gql`
-  query GetUser {
-    getUser {
-      _id
-      username
-      name
-      email
-      images {
-        url
-        public_id
-      }
-      about
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const UpdateUser = gql`
-  mutation UpdateUser($input: UpdateUserInput!) {
-    updateUser(input: $input) {
-      _id
-      username
-      name
-      email
-      images {
-        url
-        public_id
-      }
-      about
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import { GetUser } from "../../apollo/queries/auth";
+import { UpdateUser } from "../../apollo/mutations/auth";
 
 const INITIAL_STATE = {
   username: "",
@@ -68,15 +35,19 @@ const ProfileDetails = () => {
     },
   });
 
+  const setProfile = (user) => {
+    setFormData({
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      about: user.about,
+      images: user.images,
+    });
+  };
+
   useMemo(() => {
     if (data?.getUser) {
-      setFormData({
-        username: data.getUser.username,
-        name: data.getUser.name,
-        email: data.getUser.email,
-        about: data.getUser.about,
-        images: data.getUser.images,
-      });
+      setProfile(data.getUser);
     }
   }, [data]);
 
@@ -89,8 +60,8 @@ const ProfileDetails = () => {
     evt.preventDefault();
     try {
       const res = await updateUser();
-
-      console.log(res);
+      setProfile(res.data.updateUser);
+      toast.success("Profile successfully updated.");
     } catch (error) {
       console.error("PROFILE UPDATE ERROR", error);
       toast.error(error);
@@ -107,7 +78,18 @@ const ProfileDetails = () => {
       style={{ marginBottom: "1rem" }}
       onSubmit={handleSubmit}
     >
-      <Typography variant="h6">Update Profile:</Typography>
+      <Typography variant="h6" style={{ marginBottom: "0.25rem" }}>
+        Update Profile:
+      </Typography>
+      <TextField
+        id="profile-update-email"
+        label="Your email."
+        fullWidth
+        name="email"
+        value={email}
+        style={{ marginBottom: "1rem" }}
+        disabled={true}
+      />
       <TextField
         id="profile-update-username"
         label="Enter a new username."
@@ -129,16 +111,6 @@ const ProfileDetails = () => {
         disabled={loading}
       />
       <TextField
-        id="profile-update-email"
-        label="Your email."
-        fullWidth
-        name="email"
-        value={email}
-        style={{ marginBottom: "1rem" }}
-        disabled={true}
-      />
-
-      <TextField
         id="profile-update-about"
         label="Write something about your self."
         fullWidth
@@ -149,7 +121,7 @@ const ProfileDetails = () => {
         disabled={loading}
         multiline
       />
-      <Box>
+      <Box style={{ marginBottom: "1rem" }}>
         {images.map((i) => (
           <img
             src={i.url}

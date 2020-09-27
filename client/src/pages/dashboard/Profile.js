@@ -7,24 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import ProfileDetails from "../../components/dashboard/ProfileDetails";
 import ProfileResetPassword from "../../components/dashboard/ProfileResetPassword";
 import { AuthContext } from "../../context/authContext";
-
-const GetUser = gql`
-  query GetUser {
-    getUser {
-      _id
-      username
-      name
-      email
-      images {
-        url
-        public_id
-      }
-      about
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import { GetUser } from "../../apollo/queries/auth";
 
 const Profile = () => {
   const {

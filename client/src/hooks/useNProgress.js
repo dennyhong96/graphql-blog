@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import nprogress from "nprogress";
-import "nprogress/nprogress.css";
-import "../components/routes/Route.css";
 
 const useNProgress = () => {
   useState(nprogress.start());

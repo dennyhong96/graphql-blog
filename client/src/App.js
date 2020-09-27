@@ -34,7 +34,7 @@ const App = () => {
           />
         </Switch>
       </Container>
-      <ToastContainer />
+      <ToastContainer bodyStyle={{ fontFamily: "'Rubik', sans-serif" }} />
     </Fragment>
   );
 };

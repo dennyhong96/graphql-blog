@@ -43,6 +43,8 @@ const updateUser = async (_, { input }, { req, res }) => {
       { new: true, runValidators: true }
     );
 
+    console.log(user);
+
     return user;
   } catch (error) {
     console.error("[updateUser ERROR]", error);
