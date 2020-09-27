@@ -37,7 +37,7 @@ const Home = () => {
           !error &&
           data &&
           data.listPosts.map((post) => (
-            <Grid item key={post.id} xs={4}>
+            <Grid item key={post.id} xs={12} sm={6} md={4}>
               <Card elevation={3}>
                 <CardContent>
                   <Typography>{post.title}</Typography>

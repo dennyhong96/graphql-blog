@@ -6,6 +6,7 @@ import Container from "@material-ui/core/Container";
 import "react-toastify/dist/ReactToastify.css";
 
 import PrivateRoute from "./components/routes/PrivateRoute";
+import PublicRoute from "./components/routes/PublicRoute";
 import Route from "./components/routes/Route";
 import Navbar from "./components/ui/Navbar";
 import Home from "./pages/Home";
@@ -23,10 +24,18 @@ const App = () => {
       <Container style={{ paddingTop: "2rem" }}>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/complete-register" component={CompleteRegister} />
-          <Route exact path="/password-forget" component={ForgetPassword} />
+          <PublicRoute exact path="/register" component={Register} />
+          <PublicRoute exact path="/login" component={Login} />
+          <PublicRoute
+            exact
+            path="/complete-register"
+            component={CompleteRegister}
+          />
+          <PublicRoute
+            exact
+            path="/password-forget"
+            component={ForgetPassword}
+          />
           <PrivateRoute
             exact
             path="/dashboard/:subroute"

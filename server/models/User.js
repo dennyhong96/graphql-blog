@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
 
 const userSchema = new mongoose.Schema(
   {
@@ -30,7 +31,7 @@ const userSchema = new mongoose.Schema(
         {
           url:
             "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
-          key: "",
+          key: uuidv4(),
         },
       ],
     },

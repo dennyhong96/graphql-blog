@@ -16,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+import GitHubIcon from "@material-ui/icons/GitHub";
 
 import { auth } from "../../services/firebase";
 import { AuthContext } from "../../context/authContext";
@@ -70,7 +71,8 @@ const Navabr = () => {
               variant="h6"
               className={classes.title}
             >
-              GraphQL
+              <GitHubIcon style={{ fontSize: 32, marginRight: "0.5rem" }} />
+              GraphQL BLOG
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -154,9 +156,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1,
     color: "inherit",
     textDecoration: "none",
+    marginRight: "auto",
+    display: "flex",
+    alignItems: "center",
   },
   toolBar: {
     padding: 0,

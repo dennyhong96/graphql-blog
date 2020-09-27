@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core";
+import ImageFadeIn from "react-image-fade-in";
 
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
@@ -13,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Skeleton from "@material-ui/lab/Skeleton";
 
 import { GetUser } from "../../apollo/queries/auth";
 import { UpdateUser } from "../../apollo/mutations/auth";
@@ -30,8 +30,8 @@ const resizeFile = (file) =>
   new Promise((resolve) => {
     Resizer.imageFileResizer(
       file,
-      500,
-      500,
+      300,
+      300,
       "JPEG",
       100,
       0,
@@ -43,9 +43,14 @@ const resizeFile = (file) =>
   });
 
 const useStyles = makeStyles((theme) => ({
-  images: { marginBottom: "1rem", display: "flex", flexWrap: "wrap" },
+  images: {
+    marginBottom: "1rem",
+    display: "flex",
+    flexWrap: "wrap",
+  },
   image: {
     position: "relative",
+    marginRight: "1.25rem",
     "&:hover": {
       "& .MuiIconButton-root": {
         opacity: 1,
@@ -57,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0,
     transition: "all 0.2s ease",
     position: "absolute",
-    right: 10,
+    right: 4,
     top: 2,
     backgroundColor: "#e0e0e0",
     padding: "0.25rem",
@@ -80,7 +85,7 @@ const ProfileDetails = () => {
   const [showDropZone, setShowDropZone] = useState(true);
   const classes = useStyles();
 
-  const { data } = useQuery(GetUser);
+  const { data } = useQuery(GetUser, { fetchPolicy: "cache-and-network" });
   const [updateUser] = useMutation(UpdateUser, {
     variables: {
       input: {
@@ -102,6 +107,12 @@ const ProfileDetails = () => {
     });
   };
 
+  useMemo(() => {
+    if (data?.getUser) {
+      setProfile(data.getUser);
+    }
+  }, [data]);
+
   // Reset dropzone after adding or deleting images
   useEffect(() => {
     setShowDropZone(false);
@@ -109,12 +120,6 @@ const ProfileDetails = () => {
       setShowDropZone(true);
     }, 1);
   }, [images.length]);
-
-  useMemo(() => {
-    if (data?.getUser) {
-      setProfile(data.getUser);
-    }
-  }, [data]);
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -150,7 +155,7 @@ const ProfileDetails = () => {
       toast.success("Profile successfully updated.");
     } catch (error) {
       console.error("PROFILE UPDATE ERROR", error);
-      toast.error(error.messag || error.response.data.message);
+      toast.error(error.message || error.response.data.message);
     }
     setLoading(false);
   };
@@ -190,7 +195,7 @@ const ProfileDetails = () => {
       style={{ marginBottom: "1rem" }}
       onSubmit={handleSubmit}
     >
-      <Typography variant="h6" style={{ marginBottom: "0.25rem" }}>
+      <Typography variant="h6" style={{ marginBottom: "0.5rem" }}>
         Update Profile:
       </Typography>
       <TextField
@@ -244,15 +249,16 @@ const ProfileDetails = () => {
                 <DeleteIcon className={classes.deleteIcon} />
               </IconButton>
             )}
-            <img
+            <ImageFadeIn
+              height={150}
+              width={150}
               src={i.url}
               alt="User profile"
               style={{
                 borderRadius: 3,
                 objectFit: "cover",
-                height: 100,
-                width: 100,
-                marginRight: "0.5rem",
+                height: 150,
+                width: 150,
               }}
             />
           </Box>
