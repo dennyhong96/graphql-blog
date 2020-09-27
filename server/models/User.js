@@ -29,7 +29,8 @@ const userSchema = new mongoose.Schema(
       ],
       default: [
         {
-          url: "https://via.placeholder.com/200x200?text=Profile",
+          url:
+            "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
           public_id: shortId.generate(),
         },
       ],
