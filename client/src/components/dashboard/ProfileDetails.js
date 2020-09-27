@@ -2,11 +2,14 @@ import React, { useState, useMemo } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { DropzoneArea } from "material-ui-dropzone";
 import { toast } from "react-toastify";
+import Resizer from "react-image-file-resizer";
+import axios from "axios";
 
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { GetUser } from "../../apollo/queries/auth";
 import { UpdateUser } from "../../apollo/mutations/auth";
@@ -19,12 +22,30 @@ const INITIAL_STATE = {
   images: [],
 };
 
+const resizeFile = (file) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      500,
+      500,
+      "JPEG",
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      "base64"
+    );
+  });
+
 const ProfileDetails = () => {
   const [formData, setFormData] = useState(INITIAL_STATE);
   const { username, name, about, email, images } = formData;
+  const [imageFiles, setImageFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const { data } = useQuery(GetUser);
-  const [updateUser, { loading, error }] = useMutation(UpdateUser, {
+  const [updateUser] = useMutation(UpdateUser, {
     variables: {
       input: {
         username,
@@ -58,7 +79,28 @@ const ProfileDetails = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    setLoading(true);
     try {
+      if (imageFiles.length) {
+        const promises = imageFiles.map((i) => resizeFile(i));
+        const imageUris = await Promise.all(promises);
+
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/v1/images/profiles`,
+          { images: imageUris },
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("AUTH_TOKEN")}`,
+            },
+          }
+        );
+        console.log(res.data.data);
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, ...res.data.data.images],
+        }));
+      }
+
       const res = await updateUser();
       setProfile(res.data.updateUser);
       toast.success("Profile successfully updated.");
@@ -66,11 +108,12 @@ const ProfileDetails = () => {
       console.error("PROFILE UPDATE ERROR", error);
       toast.error(error);
     }
+    setLoading(false);
   };
 
-  if (error) {
-    console.log({ error });
-  }
+  const handleFiles = (files) => {
+    setImageFiles(files);
+  };
 
   return (
     <Box
@@ -125,22 +168,27 @@ const ProfileDetails = () => {
         {images.map((i) => (
           <img
             src={i.url}
-            alt="User profile image"
-            width={100}
+            alt="User profile"
             key={i.url}
-            style={{ borderRadius: 3 }}
+            style={{
+              borderRadius: 3,
+              objectFit: "cover",
+              height: 100,
+              width: 100,
+              marginRight: "0.5rem",
+            }}
           />
         ))}
       </Box>
       <DropzoneArea
         acceptedFiles={["image/*"]}
         dropzoneText={"Click or Drag and drop images here"}
-        onChange={(files) => console.log("Files:", files)}
+        onChange={handleFiles}
         showAlerts={false}
         filesLimit={5}
       />
-      <Button variant="contained" type="submit">
-        Update
+      <Button variant="contained" type="submit" disabled={loading}>
+        {loading ? <CircularProgress size={24} /> : "Update"}
       </Button>
     </Box>
   );

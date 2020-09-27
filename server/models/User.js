@@ -24,14 +24,14 @@ const userSchema = new mongoose.Schema(
       type: [
         {
           url: String,
-          public_id: String,
+          key: String,
         },
       ],
       default: [
         {
           url:
             "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
-          public_id: shortId.generate(),
+          key: "",
         },
       ],
     },

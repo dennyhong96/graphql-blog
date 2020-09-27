@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -42,7 +42,6 @@ const CompleteRegister = () => {
     try {
       // Sign in with email link
       const res = await auth.signInWithEmailLink(email, emailLink);
-      console.log(res);
 
       // Update user to include a password
       if (res.user?.emailVerified) {

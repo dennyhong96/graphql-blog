@@ -17,7 +17,7 @@ module.exports = gql`
 
   type Image {
     url: String
-    public_id: String
+    key: String
   }
 
   # CreateUser
@@ -36,7 +36,7 @@ module.exports = gql`
 
   input ImageInput {
     url: String
-    public_id: String
+    key: String
   }
 
   type Query {

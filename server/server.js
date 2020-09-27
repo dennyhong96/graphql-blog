@@ -13,16 +13,19 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const connectDB = require("./config/db");
+const imageRouter = require("./routes/image");
 
 const app = express();
 connectDB();
 
 // Middlewares
 app.use(morgan("dev"));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 if (process.env.NODE_ENV === "development") {
   app.use(cors(process.env.CLIENT_URL));
 }
+
+app.use("/api/v1/images", imageRouter);
 
 // Merge typeDefs and resolvers
 const typeDefs = mergeTypeDefs(

@@ -18,9 +18,7 @@ const createUser = async (_, args, { req, res }) => {
 
       // If user has a profile pic then use it
       if (currentUser.picture) {
-        userInfo.images = [
-          { url: currentUser.picture, public_id: shortId.generate() },
-        ];
+        userInfo.images = [{ url: currentUser.picture, key: "" }];
       }
 
       user = await User.create(userInfo);
@@ -43,8 +41,6 @@ const updateUser = async (_, { input }, { req, res }) => {
       { new: true, runValidators: true }
     );
 
-    console.log(user);
-
     return user;
   } catch (error) {
     console.error("[updateUser ERROR]", error);
@@ -65,12 +61,12 @@ const updateUser = async (_, { input }, { req, res }) => {
 const getUser = async (_, args, { req, res }) => {
   try {
     const currentUser = await auth(req, res);
-    console.log(currentUser);
+
     const user = await User.findOne({ email: currentUser.email });
     if (!user) {
       throw new Error("User not found.");
     }
-    console.log(user);
+
     return user;
   } catch (error) {
     throw error;

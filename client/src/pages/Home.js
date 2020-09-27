@@ -13,7 +13,6 @@ const Home = () => {
   const { loading, error, data } = useQuery(ListPosts);
 
   if (error) {
-    console.log(error.message);
     return <p>{error.message}</p>;
   }
 
