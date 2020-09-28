@@ -41,6 +41,8 @@ module.exports = gql`
 
   type Query {
     getUser: User!
+    listUsers: [User!]!
+    getPublicProfile(username: String!): User!
   }
 
   type Mutation {

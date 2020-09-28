@@ -73,6 +73,27 @@ const getUser = async (_, args, { req, res }) => {
   }
 };
 
+const getPublicProfile = async (_, { username }, ctx) => {
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      throw new Error("User not found.");
+    }
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const listUsers = async () => {
+  try {
+    const users = await User.find();
+    return users;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   Mutation: {
     createUser,
@@ -80,5 +101,7 @@ module.exports = {
   },
   Query: {
     getUser,
+    listUsers,
+    getPublicProfile,
   },
 };

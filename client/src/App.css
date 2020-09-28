@@ -31,8 +31,7 @@
   margin-bottom: 1rem !important;
   color: #424242 !important;
   background-color: inherit !important;
-  border-color: #bdbdbd !important;
-  border-width: 2px !important;
+  border: 2px dashed #bdbdbd !important;
   border-radius: 0 !important;
   transition: all 0.2s ease !important;
 }

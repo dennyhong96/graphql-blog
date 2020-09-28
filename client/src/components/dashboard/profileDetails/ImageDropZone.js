@@ -20,13 +20,7 @@ const ImageDropZone = ({ showDropZone, images, handleFiles }) => {
       clearOnUnmount
     />
   ) : (
-    <Box
-      style={{
-        height: "6.5rem",
-        border: "2px dashed #bdbdbd",
-        marginBottom: "1rem",
-      }}
-    />
+    <div className="MuiDropzoneArea-root" />
   );
 };
 
