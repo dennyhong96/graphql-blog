@@ -15,6 +15,8 @@ import Login from "./pages/auth/Login";
 import Dashboard from "./pages/dashboard/Dashboard";
 import CompleteRegister from "./pages/auth/CompleteRegister";
 import ForgetPassword from "./pages/auth/ForgetPassword";
+import UserList from "./pages/users/UserList";
+import UserPublicProfile from "./pages/users/UserPublicProfile";
 import "./App.css";
 
 const App = () => {
@@ -23,7 +25,6 @@ const App = () => {
       <Navbar />
       <Container style={{ paddingTop: "2rem" }}>
         <Switch>
-          <Route exact path="/" component={Home} />
           <PublicRoute exact path="/register" component={Register} />
           <PublicRoute exact path="/login" component={Login} />
           <PublicRoute
@@ -36,11 +37,14 @@ const App = () => {
             path="/password-forget"
             component={ForgetPassword}
           />
+          <Route exact path="/users" component={UserList} />
+          <Route exact path="/users/:username" component={UserPublicProfile} />
           <PrivateRoute
             exact
             path="/dashboard/:subroute"
             component={Dashboard}
           />
+          <Route exact path="/" component={Home} />
         </Switch>
       </Container>
       <ToastContainer bodyStyle={{ fontFamily: "'Rubik', sans-serif" }} />

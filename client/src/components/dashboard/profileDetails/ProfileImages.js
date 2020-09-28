@@ -6,6 +6,42 @@ import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 
+const ProfileImages = ({ images, handleDelete }) => {
+  const classes = useStyles();
+
+  return (
+    <Box className={classes.images}>
+      {images.map((i) => (
+        <Box key={i.url} className={classes.image}>
+          {handleDelete && i.key && (
+            <IconButton
+              className={classes.deleteBtn}
+              onClick={() => handleDelete(i)}
+            >
+              <DeleteIcon className={classes.deleteIcon} />
+            </IconButton>
+          )}
+          <ImageFadeIn
+            height={150}
+            width={150}
+            src={i.url}
+            alt="User profile"
+            style={{
+              boxShadow: "0 3px 7px rgb(0,0,0,0.1)",
+              borderRadius: 3,
+              objectFit: "cover",
+              height: 150,
+              width: 150,
+            }}
+          />
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
+export default ProfileImages;
+
 const useStyles = makeStyles(() => ({
   images: {
     marginBottom: "1rem",
@@ -40,39 +76,3 @@ const useStyles = makeStyles(() => ({
     height: 20,
   },
 }));
-
-const ProfileImages = ({ images, handleDelete }) => {
-  const classes = useStyles();
-
-  return (
-    <Box className={classes.images}>
-      {images.map((i) => (
-        <Box key={i.url} className={classes.image}>
-          {i.key && (
-            <IconButton
-              className={classes.deleteBtn}
-              onClick={() => handleDelete(i)}
-            >
-              <DeleteIcon className={classes.deleteIcon} />
-            </IconButton>
-          )}
-          <ImageFadeIn
-            height={150}
-            width={150}
-            src={i.url}
-            alt="User profile"
-            style={{
-              boxShadow: "0 3px 7px rgb(0,0,0,0.1)",
-              borderRadius: 3,
-              objectFit: "cover",
-              height: 150,
-              width: 150,
-            }}
-          />
-        </Box>
-      ))}
-    </Box>
-  );
-};
-
-export default ProfileImages;

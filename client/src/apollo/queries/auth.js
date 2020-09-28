@@ -10,3 +10,21 @@ export const GetUser = gql`
   }
   ${UserInfo}
 `;
+
+export const ListUsers = gql`
+  query ListUsers {
+    listUsers {
+      ...userInfo
+    }
+  }
+  ${UserInfo}
+`;
+
+export const GetPublicProfile = gql`
+  query GetPublicProfile($username: String!) {
+    getPublicProfile(username: $username) {
+      ...userInfo
+    }
+  }
+  ${UserInfo}
+`;

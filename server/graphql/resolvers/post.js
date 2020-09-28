@@ -32,7 +32,6 @@ const totalPosts = async (_, args, { req, res }) => {
 
 const listPosts = async (_, args, { req, res }) => {
   try {
-    await auth(req, res);
     return POSTS;
   } catch (error) {
     throw error;

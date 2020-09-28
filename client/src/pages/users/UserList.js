@@ -1,17 +1,15 @@
 import React, { Fragment } from "react";
 import { useQuery } from "@apollo/client";
 
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Fade from "@material-ui/core/Fade";
-import Skeleton from "@material-ui/lab/Skeleton";
 
-import { ListPosts } from "../apollo/queries/posts";
+import UserCard from "../../components/users/UserCard";
+import UserCardSkeleton from "../../components/users/UserCardSkeleton";
+import { ListUsers } from "../../apollo/queries/auth";
 
-const Home = () => {
-  const { loading, error, data } = useQuery(ListPosts);
+const UserList = () => {
+  const { loading, error, data } = useQuery(ListUsers);
 
   if (error) {
     return <p>{error.message}</p>;
@@ -25,12 +23,7 @@ const Home = () => {
           Array.from({ length: 8 }).map((_, idx) => (
             <Fade in={loading} timeout={250} key={idx}>
               <Grid item xs={4}>
-                <Skeleton
-                  variant="rect"
-                  height="2rem"
-                  style={{ marginBottom: "0.5rem" }}
-                />
-                <Skeleton variant="rect" height="7rem" />
+                <UserCardSkeleton />
               </Grid>
             </Fade>
           ))}
@@ -39,19 +32,14 @@ const Home = () => {
         {!loading &&
           !error &&
           data &&
-          data.listPosts.map((post) => (
+          data.listUsers.map((user) => (
             <Fade
               in={!loading && !error && !!data}
               timeout={750}
-              key={post._id}
+              key={user._id}
             >
               <Grid item xs={12} sm={6} md={4}>
-                <Card elevation={3}>
-                  <CardContent>
-                    <Typography>{post.title}</Typography>
-                    <Typography>{post.description}</Typography>
-                  </CardContent>
-                </Card>
+                <UserCard user={user} />
               </Grid>
             </Fade>
           ))}
@@ -60,4 +48,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default UserList;

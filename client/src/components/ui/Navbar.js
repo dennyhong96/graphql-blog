@@ -69,10 +69,8 @@ const Navabr = () => {
               </IconButton>
             </Hidden>
             <Typography
-              component="a"
-              href="https://github.com/hyhong-code/graphql-blog-templates"
-              target="_blank"
-              rel="noopener noreferrer"
+              component={Link}
+              to="/"
               variant="h6"
               className={classes.title}
             >
@@ -94,10 +92,13 @@ const Navabr = () => {
                 onChange={(evt) => setSearchText(evt.target.value)}
               />
             </div>
-            <Button color="inherit">Search</Button>
-
-            <Button component={Link} to="/" color="inherit">
-              Home
+            <Button
+              component={Link}
+              to="/users"
+              style={{ marginLeft: "0.5rem" }}
+              color="inherit"
+            >
+              Users
             </Button>
 
             {!state.user ? (
