@@ -1,20 +1,29 @@
 const { gql } = require("apollo-server-express");
 
 module.exports = gql`
+  # Scalar type
+  scalar DateTime
+
   type Post {
-    id: ID!
+    _id: ID!
     title: String!
-    description: String!
+    content: String!
+    tags: [String!]!
+    image: Image! # Type defined in auth typeDef
+    postedBy: User! # Type defined in auth typeDef
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   # input types
   input CreatePostInput {
     title: String!
-    description: String!
+    content: String!
+    tags: [String!]!
+    image: ImageInput
   }
 
   type Query {
-    totalPosts: Int!
     listPosts: [Post!]!
   }
 
