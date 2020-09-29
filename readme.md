@@ -1,4 +1,4 @@
-# Blog application template for everyone
+# General purpose real-time blog application template
 
 ### An easy-to-use full-stack blog application template built with Material-UI, React, Nodejs, MongoDB, and GraphQL.
 

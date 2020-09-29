@@ -41,4 +41,10 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exposts = mongoose.model("Post", postSchema);
+postSchema.pre(/^find/, function () {
+  this.populate({
+    path: "postedBy",
+  });
+});
+
+module.exports = mongoose.model("Post", postSchema);
