@@ -23,6 +23,14 @@ module.exports = gql`
     image: ImageInput
   }
 
+  input UpdatePostInput {
+    id: ID!
+    title: String!
+    content: String!
+    tags: [String!]!
+    image: ImageInput
+  }
+
   type Query {
     listPosts: [Post!]!
     listPostsByUser(username: String!): [Post!]!
@@ -31,6 +39,7 @@ module.exports = gql`
   # Mutation
   type Mutation {
     createPost(input: CreatePostInput!): Post!
-    deletePost(id: ID!): ID!
+    updatePost(input: UpdatePostInput): Post!
+    deletePost(id: ID!): Post!
   }
 `;

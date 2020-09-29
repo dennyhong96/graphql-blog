@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { formatDistance } from "date-fns";
 import ImageFadeIn from "react-image-fade-in";
+import { useMutation } from "@apollo/client";
+import { toast } from "react-toastify";
 
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -15,12 +17,68 @@ import IconButton from "@material-ui/core/IconButton";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 
+import { DeletePost } from "../../apollo/mutations/posts";
+import { ListPosts, ListPostsByUser } from "../../apollo/queries/posts";
 import { AuthContext } from "../../context/authContext";
 
 const PostCard = ({ post }) => {
   const {
     state: { user: loggedInUser },
   } = useContext(AuthContext);
+
+  const [deletePost] = useMutation(DeletePost, {
+    update: (cache, { data: { deletePost } }) => {
+      try {
+        const { listPosts } = cache.readQuery({
+          query: ListPosts,
+        });
+
+        cache.writeQuery({
+          query: ListPosts,
+          data: {
+            listPosts: listPosts.filter((p) => p._id !== deletePost._id),
+          },
+        });
+      } catch (error) {
+        // Handle listPosts query not executed yet
+        console.error("[CERATE POST UPDATE CACHE FAILED - ListPosts QUERY]");
+      }
+
+      try {
+        const { listPostsByUser } = cache.readQuery({
+          query: ListPostsByUser,
+          variables: { username: deletePost.postedBy.username },
+        });
+
+        cache.writeQuery({
+          query: ListPostsByUser,
+          variables: { username: deletePost.postedBy.username },
+          data: {
+            listPostsByUser: listPostsByUser.filter(
+              (p) => p._id !== deletePost._id
+            ),
+          },
+        });
+      } catch (error) {
+        // Handle listPosts query not executed yet
+        console.error(
+          "[CERATE POST UPDATE CACHE FAILED - ListPostsByUser QUERY]"
+        );
+      }
+    },
+  });
+
+  const handleDelete = async () => {
+    try {
+      await deletePost({
+        variables: { id: post._id },
+      });
+      toast.success(`Post ${post.title} successfully deleted.`);
+    } catch (error) {
+      console.error("[DELETE POST ERROR]", error);
+      toast.error(error.message);
+    }
+  };
 
   return (
     <Card elevation={4}>
@@ -59,7 +117,7 @@ const PostCard = ({ post }) => {
       </CardContent>
       <CardActions disableSpacing style={{ display: "flex" }}>
         {loggedInUser && post.postedBy.email === loggedInUser.email && (
-          <IconButton>
+          <IconButton onClick={handleDelete}>
             <DeleteOutlineOutlinedIcon />
           </IconButton>
         )}

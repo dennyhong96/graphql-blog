@@ -47,6 +47,7 @@ const CreatePost = () => {
           "[CERATE POST UPDATE CACHE FAILED - ListPostsByUser QUERY]"
         );
       }
+
       try {
         // Read Query from cache (all posts)
         const { listPosts } = cache.readQuery({ query: ListPosts });

@@ -10,3 +10,12 @@ export const CreatePost = gql`
   }
   ${PostInfo}
 `;
+
+export const DeletePost = gql`
+  mutation DeletePost($id: ID!) {
+    deletePost(id: $id) {
+      ...postInfo
+    }
+  }
+  ${PostInfo}
+`;
