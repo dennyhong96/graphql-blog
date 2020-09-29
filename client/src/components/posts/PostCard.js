@@ -29,6 +29,8 @@ const PostCard = ({ post }) => {
       <ImageFadeIn
         src={post.image.url}
         title={post.title}
+        height={200}
+        transition={500}
         style={{ width: "100%", height: 200, objectFit: "cover" }}
       />
 
@@ -48,13 +50,9 @@ const PostCard = ({ post }) => {
         ))}
       </CardContent>
       <CardActions disableSpacing style={{ display: "flex" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: "auto" }}
-        >
+        <Button color="primary" style={{ marginLeft: "auto" }}>
           <VisibilityOutlinedIcon style={{ marginRight: 3, fontSize: 20 }} />
-          <span style={{ marginTop: 1 }}>Read</span>
+          <span>Read</span>
         </Button>
       </CardActions>
     </Card>

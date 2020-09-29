@@ -1,15 +1,11 @@
 import React, { Fragment } from "react";
 import { useQuery } from "@apollo/client";
 
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Fade from "@material-ui/core/Fade";
-import Skeleton from "@material-ui/lab/Skeleton";
 
 import PostCard from "../components/posts/PostCard";
-
+import PostCardSkeleton from "../components/posts/PostCardSkeleton";
 import { ListPosts } from "../apollo/queries/posts";
 
 const Home = () => {
@@ -21,18 +17,13 @@ const Home = () => {
 
   return (
     <Fragment>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         {/* Show skeleton cards when loading */}
         {loading &&
           Array.from({ length: 8 }).map((_, idx) => (
             <Fade in={loading} timeout={250} key={idx}>
               <Grid item xs={4}>
-                <Skeleton
-                  variant="rect"
-                  height="2rem"
-                  style={{ marginBottom: "0.5rem" }}
-                />
-                <Skeleton variant="rect" height="7rem" />
+                <PostCardSkeleton />
               </Grid>
             </Fade>
           ))}

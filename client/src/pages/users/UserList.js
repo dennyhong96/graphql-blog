@@ -17,7 +17,7 @@ const UserList = () => {
 
   return (
     <Fragment>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         {/* Show skeleton cards when loading */}
         {loading &&
           Array.from({ length: 8 }).map((_, idx) => (
