@@ -1,8 +1,6 @@
 import React from "react";
 import { DropzoneArea } from "material-ui-dropzone";
 
-import Box from "@material-ui/core/Box";
-
 const ImageDropZone = ({ showDropZone, images, handleFiles }) => {
   return showDropZone ? (
     <DropzoneArea

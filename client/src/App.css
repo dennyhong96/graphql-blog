@@ -32,7 +32,7 @@
   color: #424242 !important;
   background-color: inherit !important;
   border: 2px dashed #bdbdbd !important;
-  border-radius: 0 !important;
+  border-radius: 10px !important;
   transition: all 0.2s ease !important;
 }
 
@@ -60,4 +60,34 @@
   right: 35px !important;
   width: 35px !important;
   height: 35px !important;
+}
+
+/* Overwrite React Quill styles */
+.quill {
+  border-radius: 10px !important;
+  overflow: hidden;
+  border: 1px solid #bdbdbd;
+  background-color: #fff;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+}
+
+.ql-toolbar {
+  border: none !important;
+  border-bottom: 1px solid #bdbdbd !important;
+}
+
+.ql-container {
+  border: none !important;
+}
+
+.ql-editor {
+  height: 100% !important;
+  min-height: 7.5rem;
+}
+
+.ql-picker-options {
+  transform: scale(0.75);
+  margin-top: -1rem !important;
+  margin-left: -1rem !important;
+  border-radius: 10px;
 }

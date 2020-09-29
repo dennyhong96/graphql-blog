@@ -18,6 +18,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import GitHubIcon from "@material-ui/icons/GitHub";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 
 import { auth } from "../../services/firebase";
 import { AuthContext } from "../../context/authContext";
@@ -77,6 +78,17 @@ const Navabr = () => {
               <GitHubIcon style={{ fontSize: 32, marginRight: "0.5rem" }} />
               GraphQL BLOG
             </Typography>
+
+            <Button
+              component={Link}
+              to="/dashboard/create"
+              color="inherit"
+              style={{ marginLeft: "1rem", marginRight: "auto" }}
+            >
+              <PostAddIcon style={{ marginRight: 1 }} />
+              <span style={{ marginTop: 3 }}>New Post</span>
+            </Button>
+
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -168,7 +180,6 @@ const useStyles = makeStyles((theme) => ({
   title: {
     color: "inherit",
     textDecoration: "none",
-    marginRight: "auto",
     display: "flex",
     alignItems: "center",
   },
