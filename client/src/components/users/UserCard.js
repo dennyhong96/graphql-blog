@@ -29,7 +29,7 @@ const UserCard = ({ user }) => {
             : "No about section yet."}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions disableSpacing>
         <Button
           component={Link}
           to={`/users/${user.username}`}

@@ -8,6 +8,8 @@ import Grid from "@material-ui/core/Grid";
 import Fade from "@material-ui/core/Fade";
 import Skeleton from "@material-ui/lab/Skeleton";
 
+import PostCard from "../components/posts/PostCard";
+
 import { ListPosts } from "../apollo/queries/posts";
 
 const Home = () => {
@@ -46,12 +48,7 @@ const Home = () => {
               key={post._id}
             >
               <Grid item xs={12} sm={6} md={4}>
-                <Card elevation={3}>
-                  <CardContent>
-                    <Typography>{post.title}</Typography>
-                    <Typography>{post.description}</Typography>
-                  </CardContent>
-                </Card>
+                <PostCard post={post} />
               </Grid>
             </Fade>
           ))}
