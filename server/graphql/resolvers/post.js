@@ -11,9 +11,10 @@ const listPosts = async (_, args, { req, res }) => {
   }
 };
 
-const listPostsByUser = async (_, { id }, ctx) => {
+const listPostsByUser = async (_, { username }, ctx) => {
   try {
-    const posts = await Post.find({ postedBy: id });
+    const postedBy = await User.findOne({ username });
+    const posts = await Post.find({ postedBy });
     return posts;
   } catch (error) {
     throw error;

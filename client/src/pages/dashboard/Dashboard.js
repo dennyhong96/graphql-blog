@@ -9,6 +9,7 @@ import Tab from "@material-ui/core/Tab";
 import Profile from "./Profile";
 import CreatePost from "./CreatePost";
 import PrivateRoute from "../../components/routes/PrivateRoute";
+import MyPosts from "./MyPosts";
 
 const SUBPATHS = [
   { pathname: "/dashboard/profile", label: "Dashboard", component: Profile },
@@ -16,6 +17,11 @@ const SUBPATHS = [
     pathname: "/dashboard/create",
     label: "Create Post",
     component: CreatePost,
+  },
+  {
+    pathname: "/dashboard/posts",
+    label: "My Posts",
+    component: MyPosts,
   },
 ];
 

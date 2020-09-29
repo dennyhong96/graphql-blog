@@ -10,3 +10,12 @@ export const ListPosts = gql`
   }
   ${PostInfo}
 `;
+
+export const ListPostsByUser = gql`
+  query ListPostsByUser($username: String!) {
+    listPostsByUser(username: $username) {
+      ...postInfo
+    }
+  }
+  ${PostInfo}
+`;
