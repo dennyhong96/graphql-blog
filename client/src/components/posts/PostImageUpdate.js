@@ -1,13 +1,11 @@
 import React from "react";
 import { DropzoneArea } from "material-ui-dropzone";
 
-const PostImageUpdate = ({ images, handleFiles }) => {
+const PostImageUpdate = ({ image, handleFiles }) => {
   return (
     <DropzoneArea
       acceptedFiles={["image/*"]}
-      dropzoneText={
-        !images.length ? "Attach an image for your post" : images[0]?.name
-      }
+      dropzoneText={!image ? "Attach an image for your post" : image.name}
       onChange={handleFiles}
       inputProps={{ disabled: false }}
       filesLimit={1}
