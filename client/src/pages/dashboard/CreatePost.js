@@ -57,10 +57,13 @@ const CreatePost = () => {
         `Post "${createPostRes.data.createPost.title}" has been successfully publishsed.`
       );
 
+      // Reset inputs
       setTitle("");
       setContent("");
       setTags([]);
       setImage(null);
+
+      // Reset dropzone
       setShowDropZone(false);
       setTimeout(() => {
         setShowDropZone(true);

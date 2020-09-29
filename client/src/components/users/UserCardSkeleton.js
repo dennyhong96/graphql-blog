@@ -12,8 +12,8 @@ const UserCardSkeleton = () => {
     <Card elevation={3}>
       <CardHeader
         avatar={<Skeleton variant="circle" width={40} height={40} />}
-        title={<Skeleton height={12} width="40%" style={{ marginBottom: 8 }} />}
-        subheader={<Skeleton height={10} width="30%" />}
+        title={<Skeleton width="40%" />}
+        subheader={<Skeleton width="30%" />}
       />
       <Divider />
       <CardContent style={{ minHeight: 100 }}>
