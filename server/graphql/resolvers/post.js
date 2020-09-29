@@ -33,6 +33,29 @@ const createPost = async (_, { input }, { req, res }) => {
   }
 };
 
+const deletePost = async (_, { id }, ctx) => {
+  try {
+    const currentUser = await auth(req, res);
+    const post = await Post.findById(id);
+
+    // Handle post not exits
+    if (!post) {
+      throw new error("Post not found.");
+    }
+
+    // Handle user not owner of post
+    if (post.postedBy.email !== currentUser.email) {
+      throw new error("User not authorized to delte this post.");
+    }
+
+    // Delete post
+    await Post.findByIdAndDelete(post._id);
+    return post._id;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   Query: {
     listPosts,
@@ -40,5 +63,6 @@ module.exports = {
   },
   Mutation: {
     createPost,
+    deletePost,
   },
 };
