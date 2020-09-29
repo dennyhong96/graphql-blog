@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { formatDistance } from "date-fns";
 import ImageFadeIn from "react-image-fade-in";
 
@@ -10,10 +10,18 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
+import IconButton from "@material-ui/core/IconButton";
 
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
+
+import { AuthContext } from "../../context/authContext";
 
 const PostCard = ({ post }) => {
+  const {
+    state: { user: loggedInUser },
+  } = useContext(AuthContext);
+
   return (
     <Card elevation={4}>
       {/* Card Head User iInfo & Date */}
@@ -50,6 +58,11 @@ const PostCard = ({ post }) => {
         ))}
       </CardContent>
       <CardActions disableSpacing style={{ display: "flex" }}>
+        {loggedInUser && post.postedBy.email === loggedInUser.email && (
+          <IconButton>
+            <DeleteOutlineOutlinedIcon />
+          </IconButton>
+        )}
         <Button color="primary" style={{ marginLeft: "auto" }}>
           <VisibilityOutlinedIcon style={{ marginRight: 3, fontSize: 20 }} />
           <span>Read</span>

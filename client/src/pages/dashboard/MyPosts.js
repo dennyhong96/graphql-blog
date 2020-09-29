@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useQuery, useLazyQuery } from "@apollo/client";
 
 import Grid from "@material-ui/core/Grid";
@@ -22,7 +21,7 @@ const MyPost = () => {
     if (data && data.getUser) {
       listPostsByUser({ variables: { username: data.getUser.username } });
     }
-  }, [data]);
+  }, [data, listPostsByUser]);
 
   return (
     <Grid container spacing={4}>

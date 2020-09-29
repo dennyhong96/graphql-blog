@@ -14,6 +14,7 @@ import ShareIcon from "@material-ui/icons/Share";
 
 import { uploadPostImage } from "../../utils/restRequests";
 import { CreatePost as CreatePostMutation } from "../../apollo/mutations/posts";
+import { ListPostsByUser, ListPosts } from "../../apollo/queries/posts";
 import PostEditor from "../../components/posts/PostEditor";
 import PostImageUpdate from "../../components/posts/PostImageUpdate";
 
@@ -24,7 +25,42 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const [showDropZone, setShowDropZone] = useState(true);
-  const [createPost] = useMutation(CreatePostMutation);
+
+  // Mutation with cache update
+  const [createPost] = useMutation(CreatePostMutation, {
+    update: (cache, { data: { createPost } }) => {
+      try {
+        // Read Query from cache (user's posts)
+        const { listPostsByUser } = cache.readQuery({
+          query: ListPostsByUser,
+          variables: { username: createPost.postedBy.username },
+        });
+        // Write mutation data to cache (user's posts)
+        cache.writeQuery({
+          query: ListPostsByUser,
+          data: { listPostsByUser: [createPost, ...listPostsByUser] },
+          variables: { username: createPost.postedBy.username },
+        });
+      } catch (error) {
+        // Handle listPostsByUser query not executed yet
+        console.error(
+          "[CERATE POST UPDATE CACHE FAILED - ListPostsByUser QUERY]"
+        );
+      }
+      try {
+        // Read Query from cache (all posts)
+        const { listPosts } = cache.readQuery({ query: ListPosts });
+        // Write mutation data to cache (all posts)
+        cache.writeQuery({
+          query: ListPosts,
+          data: { listPosts: [createPost, ...listPosts] },
+        });
+      } catch (error) {
+        // Handle listPosts query not executed yet
+        console.error("[CERATE POST UPDATE CACHE FAILED - ListPosts QUERY]");
+      }
+    },
+  });
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();

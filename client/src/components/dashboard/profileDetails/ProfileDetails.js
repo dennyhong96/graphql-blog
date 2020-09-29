@@ -33,7 +33,7 @@ const ProfileDetails = () => {
   const { username, name, about, images } = formData;
 
   // Apollo
-  const { data } = useQuery(GetUser, { fetchPolicy: "cache-and-network" });
+  const { data } = useQuery(GetUser);
   const [updateUser] = useMutation(UpdateUser, {
     variables: {
       input: {
