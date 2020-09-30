@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { Fragment, useContext } from "react";
 import { formatDistance } from "date-fns";
 import ImageFadeIn from "react-image-fade-in";
 import { useMutation } from "@apollo/client";
@@ -14,17 +14,20 @@ import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 import IconButton from "@material-ui/core/IconButton";
 
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 
 import { DeletePost } from "../../apollo/mutations/posts";
 import { ListPosts, ListPostsByUser } from "../../apollo/queries/posts";
 import { AuthContext } from "../../context/authContext";
+import { UpdatePostContext } from "../../context/postUpdateContext";
 
 const PostCard = ({ post }) => {
   const {
     state: { user: loggedInUser },
   } = useContext(AuthContext);
+  const { state, setState } = useContext(UpdatePostContext);
 
   const [deletePost] = useMutation(DeletePost, {
     update: (cache, { data: { deletePost } }) => {
@@ -117,9 +120,14 @@ const PostCard = ({ post }) => {
       </CardContent>
       <CardActions disableSpacing style={{ display: "flex" }}>
         {loggedInUser && post.postedBy.email === loggedInUser.email && (
-          <IconButton onClick={handleDelete}>
-            <DeleteOutlineOutlinedIcon />
-          </IconButton>
+          <Fragment>
+            <IconButton onClick={handleDelete}>
+              <DeleteOutlineOutlinedIcon />
+            </IconButton>
+            <IconButton onClick={() => setState({ post })}>
+              <EditRoundedIcon />
+            </IconButton>
+          </Fragment>
         )}
         <Button color="primary" style={{ marginLeft: "auto" }}>
           <VisibilityOutlinedIcon style={{ marginRight: 3, fontSize: 20 }} />

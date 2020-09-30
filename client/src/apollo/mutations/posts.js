@@ -19,3 +19,12 @@ export const DeletePost = gql`
   }
   ${PostInfo}
 `;
+
+export const UpdatePost = gql`
+  mutation UpdatePost($input: UpdatePostInput!) {
+    updatePost(input: $input) {
+      ...postInfo
+    }
+  }
+  ${PostInfo}
+`;

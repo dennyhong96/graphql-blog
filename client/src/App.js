@@ -17,6 +17,7 @@ import CompleteRegister from "./pages/auth/CompleteRegister";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import UserList from "./pages/users/UserList";
 import UserPublicProfile from "./pages/users/UserPublicProfile";
+import UpdatePostModal from "./components/posts/PostCardUpdate";
 import "./App.css";
 
 const App = () => {
@@ -48,6 +49,7 @@ const App = () => {
         </Switch>
       </Container>
       <ToastContainer bodyStyle={{ fontFamily: "'Rubik', sans-serif" }} />
+      <UpdatePostModal />
     </Fragment>
   );
 };

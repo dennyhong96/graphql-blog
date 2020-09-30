@@ -30,7 +30,7 @@ const ResetPasswordDialog = ({
           color="primary"
           variant="contained"
           autoFocus
-          disabled={disabled || loading}
+          disabled={disabled ? disabled || loading : loading}
         >
           {loading ? <CircularProgress size={24} /> : confirmButtonText}
         </Button>
