@@ -137,7 +137,7 @@ const Home = () => {
               {firstLoad &&
                 loading &&
                 Array.from({ length: 6 }).map((_, idx) => (
-                  <Grid item xs={4} key={idx}>
+                  <Grid item key={idx} xs={12} sm={6} md={4}>
                     <motion.div
                       variants={skeletonVariants}
                       initial="hidden"

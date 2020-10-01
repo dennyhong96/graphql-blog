@@ -15,9 +15,9 @@ import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import GitHubIcon from "@material-ui/icons/GitHub";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import GroupRoundedIcon from "@material-ui/icons/GroupRounded";
+import FreeBreakfastRoundedIcon from "@material-ui/icons/FreeBreakfastRounded";
 
 import { auth } from "../../services/firebase";
 import { AuthContext } from "../../context/authContext";
@@ -76,12 +76,13 @@ const Navabr = () => {
               className={classes.title}
               style={{ marginRight: state.user ? "0.5rem" : "auto" }}
             >
-              <GitHubIcon
+              <FreeBreakfastRoundedIcon
                 style={{
                   fontSize: 32,
+                  marginRight: 5,
                 }}
               />
-              GraphQL BLOG
+              Realtime Blog
             </Typography>
 
             {state.user && (
