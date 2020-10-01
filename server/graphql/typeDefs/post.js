@@ -32,7 +32,7 @@ module.exports = gql`
   }
 
   type Query {
-    listPosts: [Post!]!
+    listPosts(numPage: Int, numLimit: Int): [Post!]!
     listPostsByUser(username: String!): [Post!]!
     getPost(id: ID!): Post!
   }

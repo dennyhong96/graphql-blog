@@ -109,7 +109,8 @@ const PostCard = ({ post }) => {
         <CardContent>
           <Typography
             gutterBottom
-            style={{ fontWeight: 500, fontSize: "1.2rem" }}
+            noWrap
+            style={{ fontWeight: 500, fontSize: "1.1rem" }}
           >
             {post.title}
           </Typography>

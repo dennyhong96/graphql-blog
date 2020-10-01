@@ -2,9 +2,18 @@ const Post = require("../../models/Post");
 const User = require("../../models/User");
 const auth = require("../../middlewares/auth");
 
-const listPosts = async (_, args, { req, res }) => {
+const listPosts = async (_, { numPage, numLimit }, { req, res }) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    if (numLimit && !numPage) {
+      throw new Error("Must provide a page number if limit is provided.");
+    }
+
+    let query = Post.find().sort({ createdAt: -1 });
+    if (numLimit) {
+      query = query.skip((numPage - 1) * numLimit).limit(numLimit);
+    }
+
+    const posts = await query;
     return posts;
   } catch (error) {
     throw error;
