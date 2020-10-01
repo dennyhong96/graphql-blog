@@ -60,8 +60,6 @@ exports.deleteProfileImage = async (req, res, next) => {
   try {
     const { imageKey } = req.query;
 
-    console.log(imageKey);
-
     // Check if user owns the image
     const user = await User.findOne({ "images.key": imageKey });
     if (!user || user._id.toString() !== req.user._id.toString()) {

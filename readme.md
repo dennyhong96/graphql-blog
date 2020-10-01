@@ -1,6 +1,6 @@
 # Full-stack blog application template
 
-### In the spirit of learning GraphQL and Apollo Server / Apollo Client, I created this easy-to-use full-stack blog application template using React, Material-UI, Nodejs, MongoDB
+### In the spirit of learning GraphQL and Apollo, I created this easy-to-use full-stack blog application template with React, Material-UI, Nodejs, MongoDB
 
 ## Installation
 

@@ -1,21 +1,19 @@
-import React, { useState, useContext, Fragment } from "react";
+import React, { useContext, Fragment } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles, fade } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import { useHistory, useLocation } from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
-import InputBase from "@material-ui/core/InputBase";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Hidden from "@material-ui/core/Hidden";
 
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import PostAddIcon from "@material-ui/icons/PostAdd";
@@ -23,13 +21,14 @@ import PostAddIcon from "@material-ui/icons/PostAdd";
 import { auth } from "../../services/firebase";
 import { AuthContext } from "../../context/authContext";
 import client from "../../apollo/client";
+import SearchBar from "./SearchBar";
 
 const Navabr = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [searchText, setSearchText] = useState("");
   const { state, dispatch } = useContext(AuthContext);
   const history = useHistory();
+  const location = useLocation();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -79,35 +78,26 @@ const Navabr = () => {
               GraphQL BLOG
             </Typography>
 
-            <Button
-              component={Link}
-              to="/dashboard/create"
-              color="inherit"
-              style={{ marginLeft: "1rem", marginRight: "auto" }}
-            >
-              <PostAddIcon style={{ marginRight: 1 }} />
-              <span style={{ marginTop: 3 }}>New Post</span>
-            </Button>
+            {state.user && (
+              <Button
+                component={Link}
+                to="/dashboard/create"
+                color="inherit"
+                style={{ marginLeft: "1rem" }}
+              >
+                <PostAddIcon style={{ marginRight: 1 }} />
+                <span style={{ marginTop: 3 }}>New Post</span>
+              </Button>
+            )}
 
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-                value={searchText}
-                onChange={(evt) => setSearchText(evt.target.value)}
-              />
-            </div>
+            {location.pathname === "/" && <SearchBar />}
+
             <Button
               component={Link}
               to="/users"
-              style={{ marginLeft: "0.5rem" }}
+              style={{
+                marginLeft: location.pathname !== "/" ? "auto" : "0.5rem",
+              }}
               color="inherit"
             >
               Users
@@ -185,44 +175,5 @@ const useStyles = makeStyles((theme) => ({
   },
   toolBar: {
     padding: 0,
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
   },
 }));

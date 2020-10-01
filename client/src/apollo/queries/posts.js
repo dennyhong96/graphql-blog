@@ -34,3 +34,12 @@ export const CountPosts = gql`
     countPosts
   }
 `;
+
+export const SearchPosts = gql`
+  query SearchPosts($term: String!) {
+    searchPosts(term: $term) {
+      ...postInfo
+    }
+  }
+  ${PostInfo}
+`;

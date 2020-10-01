@@ -113,12 +113,22 @@ const countPosts = async (_, args, ctx) => {
   }
 };
 
+const searchPosts = async (_, { term }, ctx) => {
+  try {
+    const posts = await Post.find({ $text: { $search: term } });
+    return posts;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   Query: {
     listPosts,
     listPostsByUser,
     getPost,
     countPosts,
+    searchPosts,
   },
   Mutation: {
     createPost,

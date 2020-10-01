@@ -7,6 +7,7 @@ import "nprogress/nprogress.css";
 
 import { AuthProvider } from "./context/authContext";
 import { UpdatePostProvider } from "./context/postUpdateContext";
+import { PostSearchProvider } from "./context/postSearchResult";
 import App from "./App";
 import theme from "./mui/theme";
 import client from "./apollo/client";
@@ -15,12 +16,14 @@ ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
       <AuthProvider>
-        <UpdatePostProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <App />
-          </ThemeProvider>
-        </UpdatePostProvider>
+        <PostSearchProvider>
+          <UpdatePostProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <App />
+            </ThemeProvider>
+          </UpdatePostProvider>
+        </PostSearchProvider>
       </AuthProvider>
     </ApolloProvider>
   </BrowserRouter>,
