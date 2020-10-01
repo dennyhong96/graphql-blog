@@ -88,7 +88,7 @@ const updatePost = async (_, { input }, { req, res, pubSub }) => {
 const deletePost = async (_, { id }, { req, res, pubSub }) => {
   try {
     const currentUser = await auth(req, res);
-    const post = await Post.findById(id);
+    let post = await Post.findById(id);
 
     // Handle post not exits
     if (!post) {
@@ -101,9 +101,9 @@ const deletePost = async (_, { id }, { req, res, pubSub }) => {
     }
 
     // Delete post
-    const post = await Post.findByIdAndDelete(post._id);
+    post = await Post.findByIdAndDelete(post._id);
 
-    pubSub.publish(POST_DELETED, { onPostDeleted, post });
+    pubSub.publish(POST_DELETED, { onPostDeleted: post });
     return post;
   } catch (error) {
     throw error;

@@ -62,7 +62,7 @@
   height: 35px !important;
 }
 
-/* Overwrite React Quill styles */
+/* Overwrite React Quill rich text editor styles */
 .quill {
   border-radius: 10px !important;
   overflow: hidden;

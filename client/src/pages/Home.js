@@ -9,16 +9,38 @@ import Pagination from "@material-ui/lab/Pagination";
 import PostCard from "../components/posts/PostCard";
 import PostCardSkeleton from "../components/posts/PostCardSkeleton";
 import { ListPosts, CountPosts } from "../apollo/queries/posts";
-import { OnPostCreated } from "../apollo/subscriptions/posts";
+import {
+  OnPostCreated,
+  OnPostUpdated,
+  OnPostDeleted,
+} from "../apollo/subscriptions/posts";
 
 const NUM_LIMIT = 6; // Must be in sync with default NUM_LIMIT on server side listPost resolver
 
 const Home = () => {
+  const [firstLoad, setFirstLoad] = useState(true);
   const [displayPosts, setDisplayPosts] = useState([]);
   const [page, setPage] = useState(1);
 
   // Subscribe to new post created
   useSubscription(OnPostCreated, {
+    onSubscriptionData({ client, subscriptionData }) {
+      const { listPosts } = client.cache.readQuery({ query: ListPosts });
+      client.cache.writeQuery({
+        query: ListPosts,
+        data: {
+          listPosts: [...listPosts, subscriptionData.data.onPostCreated],
+        },
+      });
+    },
+  });
+
+  // Subscribe to post updated
+  // single entity, apollo handle cache update automatically using __typename and id
+  useSubscription(OnPostUpdated);
+
+  // Subscribe to post deleted
+  useSubscription(OnPostDeleted, {
     onSubscriptionData({ client, subscriptionData }) {
       console.log(subscriptionData);
       console.log(client);
@@ -26,7 +48,9 @@ const Home = () => {
       client.cache.writeQuery({
         query: ListPosts,
         data: {
-          listPosts: [...listPosts, subscriptionData.data.onPostCreated],
+          listPosts: listPosts.filter(
+            (p) => p._id !== subscriptionData.data.onPostDeleted._id
+          ),
         },
       });
     },
@@ -38,9 +62,10 @@ const Home = () => {
   // listPosts query with fetchMore
   const { data: listData, fetchMore, error, loading } = useQuery(ListPosts, {
     fetchPolicy: "cache-and-network", // Must for fetchMore
-    notifyOnNetworkStatusChange: true,
+    notifyOnNetworkStatusChange: false,
     onCompleted(data) {
       setDisplayPosts(data.listPosts);
+      setFirstLoad(false);
     },
   });
 
@@ -81,8 +106,9 @@ const Home = () => {
           <Grid container spacing={4}>
             {/* Render search results if any */}
             <Fragment>
-              {/* Show skeleton cards when loading */}
-              {loading &&
+              {/* Show skeleton cards on first loading */}
+              {firstLoad &&
+                loading &&
                 Array.from({ length: 6 }).map((_, idx) => (
                   <Fade in={loading} timeout={250} key={idx}>
                     <Grid item xs={4}>
@@ -92,8 +118,7 @@ const Home = () => {
                 ))}
 
               {/* Show cards */}
-              {!loading &&
-                !error &&
+              {!error &&
                 displayPosts
                   .slice(
                     (page - 1) * NUM_LIMIT,

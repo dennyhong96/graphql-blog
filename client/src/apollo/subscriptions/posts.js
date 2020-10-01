@@ -10,3 +10,21 @@ export const OnPostCreated = gql`
   }
   ${PostInfo}
 `;
+
+export const OnPostUpdated = gql`
+  subscription onPostUpdated {
+    onPostUpdated {
+      ...postInfo
+    }
+  }
+  ${PostInfo}
+`;
+
+export const OnPostDeleted = gql`
+  subscription onPostDeleted {
+    onPostDeleted {
+      ...postInfo
+    }
+  }
+  ${PostInfo}
+`;
