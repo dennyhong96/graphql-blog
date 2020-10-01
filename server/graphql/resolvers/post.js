@@ -7,6 +7,8 @@ let NUM_PAGE = 1;
 
 // Constants for pubSub event trigger
 const POST_CREATED = "POST_CREATED";
+const POST_UPDATED = "POST_UPDATED";
+const POST_DELETED = "POST_DELETED";
 
 const listPosts = async (_, { numPage, numLimit }, { req, res }) => {
   try {
@@ -53,7 +55,7 @@ const createPost = async (_, { input }, { req, res, pubSub }) => {
   }
 };
 
-const updatePost = async (_, { input }, { req, res }) => {
+const updatePost = async (_, { input }, { req, res, pubSub }) => {
   try {
     const currentUser = await auth(req, res);
 
@@ -76,13 +78,14 @@ const updatePost = async (_, { input }, { req, res }) => {
       { runValidators: true, new: true }
     );
 
+    pubSub.publish(POST_UPDATED, { onPostUpdated: post });
     return post;
   } catch (error) {
     throw error;
   }
 };
 
-const deletePost = async (_, { id }, { req, res }) => {
+const deletePost = async (_, { id }, { req, res, pubSub }) => {
   try {
     const currentUser = await auth(req, res);
     const post = await Post.findById(id);
@@ -98,7 +101,9 @@ const deletePost = async (_, { id }, { req, res }) => {
     }
 
     // Delete post
-    await Post.findByIdAndDelete(post._id);
+    const post = await Post.findByIdAndDelete(post._id);
+
+    pubSub.publish(POST_DELETED, { onPostDeleted, post });
     return post;
   } catch (error) {
     throw error;
@@ -147,6 +152,12 @@ module.exports = {
   Subscription: {
     onPostCreated: {
       subscribe: (_, args, { pubSub }) => pubSub.asyncIterator([POST_CREATED]),
+    },
+    onPostUpdated: {
+      subscribe: (_, args, { pubSub }) => pubSub.asyncIterator([POST_UPDATED]),
+    },
+    onPostDeleted: {
+      subscribe: (_, args, { pubSub }) => pubSub.asyncIterator([POST_DELETED]),
     },
   },
 };

@@ -48,5 +48,7 @@ module.exports = gql`
 
   type Subscription {
     onPostCreated: Post!
+    onPostUpdated: Post!
+    onPostDeleted: Post!
   }
 `;

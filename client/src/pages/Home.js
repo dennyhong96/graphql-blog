@@ -51,12 +51,13 @@ const Home = () => {
       fetchMore({
         variables: { numPage: newPage, numLimit: NUM_LIMIT },
         updateQuery: (prev, { fetchMoreResult }) => {
-          console.log({ prev });
-          console.log({ fetchMoreResult });
           if (!fetchMoreResult) return prev;
+          const newPosts = fetchMoreResult.listPosts.filter(
+            (p) => !prev.listPosts.find((po) => po._id === p._id)
+          );
           return {
             ...prev,
-            listPosts: [...prev.listPosts, ...fetchMoreResult.listPosts],
+            listPosts: [...prev.listPosts, ...newPosts],
           };
         },
       });
