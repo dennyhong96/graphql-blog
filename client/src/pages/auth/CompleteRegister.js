@@ -80,9 +80,8 @@ const CompleteRegister = () => {
   };
 
   return (
-    <Grid container>
-      <Grid item xs />
-      <Grid item xs>
+    <Grid container justify="center">
+      <Grid item xs={11} sm={8} md={6}>
         <Card style={{ padding: "1rem" }}>
           <CardContent>
             <Box component="form" onSubmit={handleSubmit}>
@@ -126,7 +125,6 @@ const CompleteRegister = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs />
     </Grid>
   );
 };

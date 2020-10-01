@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useLazyQuery } from "@apollo/client";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -11,9 +11,8 @@ import { SearchPosts } from "../../apollo/queries/posts";
 
 let TIMEOUT;
 
-const SearchBar = () => {
+const SearchBar = ({ onOptionClicked = () => {} }) => {
   const classes = useStyles();
-  const history = useHistory();
   const [searchPosts, { data }] = useLazyQuery(SearchPosts);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -65,12 +64,22 @@ const SearchBar = () => {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={(option) => {
-        history.push(`/posts/${option._id}`);
-      }}
       getOptionLabel={(option) => option.title}
       options={options}
       loading={loading}
+      renderOption={(option) => (
+        <Link
+          onClick={onOptionClicked}
+          style={{
+            textDecoration: "none",
+            fontSize: "0.95rem",
+            color: "inherit",
+          }}
+          to={`/posts/${option._id}`}
+        >
+          {option.title}
+        </Link>
+      )}
       renderInput={(params) => (
         <TextField
           {...params}

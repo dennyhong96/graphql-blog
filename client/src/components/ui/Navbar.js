@@ -1,6 +1,6 @@
-import React, { useContext, Fragment } from "react";
+import React, { useContext, Fragment, useState } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme, useMediaQuery } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -11,6 +11,7 @@ import Container from "@material-ui/core/Container";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Hidden from "@material-ui/core/Hidden";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -26,10 +27,13 @@ import SearchBar from "./SearchBar";
 
 const Navabr = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [drawerShow, setDrawerShow] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const { state, dispatch } = useContext(AuthContext);
   const history = useHistory();
   const location = useLocation();
+  const theme = useTheme();
+  const matchXS = useMediaQuery(theme.breakpoints.down("xs"));
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,6 +41,7 @@ const Navabr = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setDrawerShow(false);
   };
 
   const handleLogout = async () => {
@@ -55,110 +60,198 @@ const Navabr = () => {
   };
 
   return (
-    <div className={classes.root}>
-      <AppBar position="fixed">
-        <Container>
-          <Toolbar className={classes.toolBar}>
-            <Hidden smUp>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </IconButton>
-            </Hidden>
-            <Typography
-              component={Link}
-              to="/"
-              variant="h6"
-              className={classes.title}
-              style={{ marginRight: state.user ? "0.5rem" : "auto" }}
-            >
-              <FreeBreakfastRoundedIcon
-                style={{
-                  fontSize: 32,
-                  marginRight: 5,
-                }}
-              />
-              Realtime Blog
-            </Typography>
-
-            {state.user && (
-              <Button
-                component={Link}
-                to="/dashboard/create"
-                color="inherit"
-                style={{ marginLeft: "1rem", marginRight: "auto" }}
-              >
-                <PostAddIcon style={{ marginRight: 1 }} />
-                <span style={{ marginTop: 3 }}>New Post</span>
-              </Button>
-            )}
-
-            {location.pathname === "/" && <SearchBar />}
-
-            <IconButton
-              component={Link}
-              to="/users"
-              style={{ color: "#fff", marginLeft: "0.25rem" }}
-            >
-              <GroupRoundedIcon />
-            </IconButton>
-
-            {!state.user ? (
-              <Fragment>
-                <Button component={Link} to="/login" color="inherit">
-                  Login
-                </Button>
-                <Button component={Link} to="/register" color="inherit">
-                  Register
-                </Button>
-              </Fragment>
-            ) : (
-              <div>
+    <Fragment>
+      <div className={classes.root}>
+        <AppBar position="fixed">
+          <Container>
+            <Toolbar className={classes.toolBar}>
+              {/* Toggle drawer icon */}
+              <Hidden smUp>
                 <IconButton
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
+                  edge="start"
+                  className={classes.menuButton}
                   color="inherit"
-                  edge="end"
+                  aria-label="menu"
+                  onClick={() => setDrawerShow(true)}
                 >
-                  <AccountCircle />
+                  <MenuIcon />
                 </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
+              </Hidden>
+
+              {/* Brand Icon and Text */}
+              <Typography
+                component={Link}
+                to="/"
+                variant="h6"
+                className={classes.title}
+                style={{
+                  marginRight: matchXS ? 0 : state.user ? "0.5rem" : "auto",
+                  marginLeft: matchXS ? "auto" : undefined,
+                  fontSize: matchXS ? "1rem" : undefined,
+                }}
+              >
+                <FreeBreakfastRoundedIcon
+                  style={{
+                    fontSize: matchXS ? 24 : 32,
+                    marginRight: 5,
                   }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={!!anchorEl}
-                  onClose={handleClose}
+                />
+                Realtime Blog
+              </Typography>
+
+              {/* New post button */}
+              {state.user && (
+                <Button
+                  component={Link}
+                  to="/dashboard/create"
+                  color="inherit"
+                  style={{ marginLeft: "1rem", marginRight: "auto" }}
                 >
-                  <MenuItem
-                    component={Link}
-                    onClick={handleClose}
-                    to="/dashboard/profile"
-                  >
-                    Dashboard
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Menu>
-              </div>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
-      <Toolbar />
-    </div>
+                  <PostAddIcon style={{ marginRight: 1 }} />
+                  <span style={{ marginTop: 3 }}>New Post</span>
+                </Button>
+              )}
+
+              <Hidden xsDown>
+                {/* Search Bar */}
+                {location.pathname === "/" && <SearchBar />}
+
+                {/* Users Button */}
+                <IconButton
+                  component={Link}
+                  to="/users"
+                  style={{ color: "#fff", marginLeft: "0.25rem" }}
+                >
+                  <GroupRoundedIcon />
+                </IconButton>
+
+                {/* Log in and resgiter  */}
+                {!state.user ? (
+                  <Fragment>
+                    <Button component={Link} to="/login" color="inherit">
+                      Login
+                    </Button>
+                    <Button component={Link} to="/register" color="inherit">
+                      Register
+                    </Button>
+                  </Fragment>
+                ) : (
+                  <div>
+                    {/* Account menu toggle */}
+                    <IconButton
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      onClick={handleMenu}
+                      color="inherit"
+                      edge="end"
+                    >
+                      <AccountCircle />
+                    </IconButton>
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={!!anchorEl}
+                      onClose={handleClose}
+                    >
+                      <MenuItem
+                        component={Link}
+                        onClick={handleClose}
+                        to="/dashboard/profile"
+                      >
+                        Dashboard
+                      </MenuItem>
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    </Menu>
+                  </div>
+                )}
+              </Hidden>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        <Toolbar />
+      </div>
+
+      {/* Drawer for small screen devices */}
+      <SwipeableDrawer
+        PaperProps={{
+          style: {
+            padding: "2.5rem 1.5rem",
+            backgroundColor: theme.palette.primary.light,
+          },
+        }}
+        anchor="right"
+        open={drawerShow}
+        onClose={() => setDrawerShow(false)}
+      >
+        {/* Search bar */}
+        <SearchBar onOptionClicked={() => setDrawerShow(false)} />
+
+        {/* User button */}
+        <IconButton
+          component={Link}
+          to="/users"
+          style={{ color: "#fff", alignSelf: "center" }}
+          onClick={() => setDrawerShow(false)}
+        >
+          <GroupRoundedIcon
+            style={{
+              width: "2.5rem",
+              height: "2.5rem",
+              color: "#fff",
+              marginTop: "1rem",
+            }}
+          />
+        </IconButton>
+
+        {!state.user ? (
+          <Fragment>
+            {/* Login register button */}
+            <Button
+              component={Link}
+              to="/login"
+              color="inherit"
+              style={{ alignSelf: "center", color: "#fff" }}
+              onClick={() => setDrawerShow(false)}
+            >
+              Login
+            </Button>
+            <Button
+              component={Link}
+              to="/register"
+              color="inherit"
+              style={{ alignSelf: "center", color: "#fff" }}
+              onClick={() => setDrawerShow(false)}
+            >
+              Register
+            </Button>
+          </Fragment>
+        ) : (
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleMenu}
+            color="inherit"
+            edge="end"
+            style={{ alignSelf: "center", marginLeft: "-0.75rem" }}
+          >
+            <AccountCircle
+              style={{ width: "2.5rem", height: "2.5rem", color: "#fff" }}
+            />
+          </IconButton>
+        )}
+      </SwipeableDrawer>
+    </Fragment>
   );
 };
 

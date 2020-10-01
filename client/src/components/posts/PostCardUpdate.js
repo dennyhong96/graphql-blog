@@ -9,7 +9,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import TextField from "@material-ui/core/TextField";
 import ChipInput from "material-ui-chip-input";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Box from "@material-ui/core/Box";
 
 import { UpdatePost } from "../../apollo/mutations/posts";
 import { UpdatePostContext } from "../../context/postUpdateContext";

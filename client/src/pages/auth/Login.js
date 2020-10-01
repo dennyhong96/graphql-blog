@@ -76,9 +76,8 @@ const Login = () => {
   };
 
   return (
-    <Grid container>
-      <Grid item xs />
-      <Grid item xs>
+    <Grid container justify="center">
+      <Grid item xs={11} sm={8} md={6}>
         <Card style={{ padding: "1rem" }} elevation={3}>
           <CardContent>
             <Box component="form" onSubmit={handleLogin}>
@@ -140,7 +139,6 @@ const Login = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs />
     </Grid>
   );
 };
