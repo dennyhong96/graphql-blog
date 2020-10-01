@@ -85,10 +85,20 @@ const deletePost = async (_, { id }, { req, res }) => {
   }
 };
 
+const getPost = async (_, { id }) => {
+  try {
+    const post = await Post.findById(id);
+    return post;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   Query: {
     listPosts,
     listPostsByUser,
+    getPost,
   },
   Mutation: {
     createPost,

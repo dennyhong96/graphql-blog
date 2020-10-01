@@ -19,3 +19,12 @@ export const ListPostsByUser = gql`
   }
   ${PostInfo}
 `;
+
+export const GetPost = gql`
+  query getPost($id: ID!) {
+    getPost(id: $id) {
+      ...postInfo
+    }
+  }
+  ${PostInfo}
+`;

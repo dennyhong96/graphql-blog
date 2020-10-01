@@ -1,6 +1,6 @@
-# General purpose real-time blog application template
+# Full-stack blog application template
 
-### An easy-to-use full-stack blog application template built with Material-UI, React, Nodejs, MongoDB, and GraphQL.
+### In the spirit of learning GraphQL and Apollo Server / Apollo Client, I created this easy-to-use full-stack blog application template using React, Material-UI, Nodejs, MongoDB
 
 ## Installation
 

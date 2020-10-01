@@ -29,7 +29,6 @@ const PostCardUpdate = () => {
   const [updatePost] = useMutation(UpdatePost);
 
   const [title, setTitle] = useState(post?.title);
-  const [image, setImage] = useState(null);
   const [content, setContent] = useState(post?.content);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(post?.tags);
@@ -143,7 +142,6 @@ const PostCardUpdate = () => {
 
           {/* Post image upload */}
           <PostImageUpdate
-            image={image}
             handleFiles={(imgs) => setNewImage(imgs.length ? imgs[0] : null)}
             isUpdate
           />
