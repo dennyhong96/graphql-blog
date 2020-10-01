@@ -4,7 +4,6 @@ const http = require("http");
 const express = require("express");
 const { ApolloServer, PubSub } = require("apollo-server-express");
 const {
-  makeExecutableSchema,
   mergeTypeDefs,
   mergeResolvers,
   loadFilesSync,
