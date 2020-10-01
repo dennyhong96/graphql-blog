@@ -40,7 +40,7 @@ const resolvers = mergeResolvers(
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req, res, pubSub }) => ({ req, res, pubSub }),
+  context: ({ req, res }) => ({ req, res, pubSub }),
 });
 
 // applyMiddleware connects ApolloServer to Express app
@@ -51,7 +51,7 @@ const httpServer = http.createServer(app);
 apolloServer.installSubscriptionHandlers(httpServer);
 
 const port = process.env.PORT || 8000;
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`Server is up at http://localhost:${port}...`);
   console.log(
     `GraphQL server is up at http://localhost:${port}${apolloServer.graphqlPath}...`

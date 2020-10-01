@@ -2,6 +2,9 @@ const Post = require("../../models/Post");
 const User = require("../../models/User");
 const auth = require("../../middlewares/auth");
 
+// Constants for pubSub event trigger
+const POST_CREATED = "POST_CREATED";
+
 const listPosts = async (_, { numPage, numLimit }, { req, res }) => {
   try {
     if ((numLimit && !numPage) || (!numLimit && numPage)) {
@@ -32,12 +35,15 @@ const listPostsByUser = async (_, { username }, ctx) => {
   }
 };
 
-const createPost = async (_, { input }, { req, res }) => {
+const createPost = async (_, { input }, { req, res, pubSub }) => {
   try {
     const currentUser = await auth(req, res);
     const user = await User.findOne({ email: currentUser.email });
     let post = await Post.create({ ...input, postedBy: user._id });
     post = await Post.findById(post._id);
+
+    // Publish new posts to onPostCreated subscripton
+    pubSub.publish(POST_CREATED, { onPostCreated: post });
     return post;
   } catch (error) {
     throw error;
@@ -134,5 +140,10 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
+  },
+  Subscription: {
+    onPostCreated: {
+      subscribe: (_, args, { pubSub }) => pubSub.asyncIterator([POST_CREATED]),
+    },
   },
 };

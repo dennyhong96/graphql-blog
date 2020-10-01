@@ -74,8 +74,13 @@ const Navabr = () => {
               to="/"
               variant="h6"
               className={classes.title}
+              style={{ marginRight: state.user ? "0.5rem" : "auto" }}
             >
-              <GitHubIcon style={{ fontSize: 32, marginRight: "0.5rem" }} />
+              <GitHubIcon
+                style={{
+                  fontSize: 32,
+                }}
+              />
               GraphQL BLOG
             </Typography>
 

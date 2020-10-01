@@ -35,6 +35,7 @@ const CreatePost = () => {
           query: ListPostsByUser,
           variables: { username: createPost.postedBy.username },
         });
+
         // Write mutation data to cache (user's posts)
         cache.writeQuery({
           query: ListPostsByUser,

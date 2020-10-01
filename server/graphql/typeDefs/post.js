@@ -45,4 +45,8 @@ module.exports = gql`
     updatePost(input: UpdatePostInput): Post!
     deletePost(id: ID!): Post!
   }
+
+  type Subscription {
+    onPostCreated: Post!
+  }
 `;
