@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { useQuery, useSubscription } from "@apollo/client";
+import { motion, AnimatePresence } from "framer-motion";
 
 import Grid from "@material-ui/core/Grid";
-import Fade from "@material-ui/core/Fade";
 import Box from "@material-ui/core/Box";
 import Pagination from "@material-ui/lab/Pagination";
 
@@ -14,6 +14,34 @@ import {
   OnPostUpdated,
   OnPostDeleted,
 } from "../apollo/subscriptions/posts";
+
+const skeletonVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.15,
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.15,
+    },
+  },
+};
+
+const variants = {
+  hidden: { opacity: 0, y: -50 },
+  visible: {
+    opacity: 1,
+    y: -0,
+  },
+  exit: {
+    opacity: 0,
+    y: -50,
+  },
+};
 
 const NUM_LIMIT = 6; // Must be in sync with default NUM_LIMIT on server side listPost resolver
 
@@ -42,8 +70,6 @@ const Home = () => {
   // Subscribe to post deleted
   useSubscription(OnPostDeleted, {
     onSubscriptionData({ client, subscriptionData }) {
-      console.log(subscriptionData);
-      console.log(client);
       const { listPosts } = client.cache.readQuery({ query: ListPosts });
       client.cache.writeQuery({
         query: ListPosts,
@@ -60,7 +86,7 @@ const Home = () => {
   const { data: countData } = useQuery(CountPosts, { pollInterval: 10000 });
 
   // listPosts query with fetchMore
-  const { data: listData, fetchMore, error, loading } = useQuery(ListPosts, {
+  const { fetchMore, error, loading } = useQuery(ListPosts, {
     fetchPolicy: "cache-and-network", // Must for fetchMore
     notifyOnNetworkStatusChange: false,
     onCompleted(data) {
@@ -103,18 +129,24 @@ const Home = () => {
         }}
       >
         <Grid item>
-          <Grid container spacing={4}>
-            {/* Render search results if any */}
-            <Fragment>
+          <AnimatePresence>
+            <Grid container spacing={4}>
+              {/* Render search results if any */}
+
               {/* Show skeleton cards on first loading */}
               {firstLoad &&
                 loading &&
                 Array.from({ length: 6 }).map((_, idx) => (
-                  <Fade in={loading} timeout={250} key={idx}>
-                    <Grid item xs={4}>
+                  <Grid item xs={4} key={idx}>
+                    <motion.div
+                      variants={skeletonVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
                       <PostCardSkeleton />
-                    </Grid>
-                  </Fade>
+                    </motion.div>
+                  </Grid>
                 ))}
 
               {/* Show cards */}
@@ -125,18 +157,19 @@ const Home = () => {
                     (page - 1) * NUM_LIMIT + NUM_LIMIT
                   )
                   .map((post) => (
-                    <Fade
-                      in={!loading && !error && !!listData}
-                      timeout={750}
-                      key={post._id}
-                    >
-                      <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={4} key={post._id}>
+                      <motion.div
+                        variants={variants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                      >
                         <PostCard post={post} />
-                      </Grid>
-                    </Fade>
+                      </motion.div>
+                    </Grid>
                   ))}
-            </Fragment>
-          </Grid>
+            </Grid>
+          </AnimatePresence>
         </Grid>
 
         <Grid item style={{ marginTop: "auto", marginBottom: "1rem" }}>

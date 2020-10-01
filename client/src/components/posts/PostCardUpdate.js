@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import axios from "axios";
 import ImageFadeIn from "react-image-fade-in";
 import resizeFile from "../../utils/resizeFile";
+import { motion, AnimatePresence } from "framer-motion";
 
 import TextField from "@material-ui/core/TextField";
 import ChipInput from "material-ui-chip-input";
@@ -16,6 +17,14 @@ import { AuthContext } from "../../context/authContext";
 import PostEditor from "./PostEditor";
 import PostImageUpdate from "./PostImageUpdate";
 import Dialog from "../ui/Dialog";
+
+const variants = {
+  hidden: { opacity: 0, y: -50 },
+  visible: { opacity: 1, y: 0 },
+  exit: {
+    opacity: 0,
+  },
+};
 
 const PostCardUpdate = () => {
   const {
@@ -97,57 +106,64 @@ const PostCardUpdate = () => {
       handleClose={() => setState({ post: false })}
       handleConfirm={handleUpdate}
     >
-      {post && (
-        <Box>
-          {/* Post title input */}
-          <TextField
-            id="create-post-title"
-            label="Give your post a title"
-            fullWidth
-            value={title}
-            onChange={(evt) => setTitle(evt.target.value)}
-            inputProps={{ type: "text" }}
-            style={{ marginBottom: "1rem" }}
-            disabled={loading}
-          />
-
-          {/* Post tags input */}
-          <ChipInput
-            defaultValue={tags}
-            // value={tags}
-            fullWidth
-            label="Add post tags"
-            placeholder="Type and press enter to add tags"
-            style={{ marginBottom: "1rem" }}
-            onChange={setTags}
-          />
-
-          {post.image && (
-            <ImageFadeIn
-              width={200}
-              height={100}
-              duration={1000}
-              src={post.image.url}
-              alt={post.title}
-              style={{
-                display: "block",
-                width: 200,
-                height: 100,
-                objectFit: "cover",
-                borderRadius: 10,
-                marginBottom: "1rem",
-              }}
+      <AnimatePresence>
+        {post && (
+          <motion.div
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            {/* Post title input */}
+            <TextField
+              id="create-post-title"
+              label="Give your post a title"
+              fullWidth
+              value={title}
+              onChange={(evt) => setTitle(evt.target.value)}
+              inputProps={{ type: "text" }}
+              style={{ marginBottom: "1rem" }}
+              disabled={loading}
             />
-          )}
 
-          {/* Post image upload */}
-          <PostImageUpdate
-            handleFiles={(imgs) => setNewImage(imgs.length ? imgs[0] : null)}
-            isUpdate
-          />
-          <PostEditor content={content} setContent={setContent} />
-        </Box>
-      )}
+            {/* Post tags input */}
+            <ChipInput
+              defaultValue={tags}
+              // value={tags}
+              fullWidth
+              label="Add post tags"
+              placeholder="Type and press enter to add tags"
+              style={{ marginBottom: "1rem" }}
+              onChange={setTags}
+            />
+
+            {post.image && (
+              <ImageFadeIn
+                width={200}
+                height={100}
+                duration={1000}
+                src={post.image.url}
+                alt={post.title}
+                style={{
+                  display: "block",
+                  width: 200,
+                  height: 100,
+                  objectFit: "cover",
+                  borderRadius: 10,
+                  marginBottom: "1rem",
+                }}
+              />
+            )}
+
+            {/* Post image upload */}
+            <PostImageUpdate
+              handleFiles={(imgs) => setNewImage(imgs.length ? imgs[0] : null)}
+              isUpdate
+            />
+            <PostEditor content={content} setContent={setContent} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Dialog>
   );
 };
