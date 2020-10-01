@@ -35,6 +35,7 @@ module.exports = gql`
     listPosts(numPage: Int, numLimit: Int): [Post!]!
     listPostsByUser(username: String!): [Post!]!
     getPost(id: ID!): Post!
+    countPosts: Int!
   }
 
   # Mutation

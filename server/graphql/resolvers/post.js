@@ -4,8 +4,10 @@ const auth = require("../../middlewares/auth");
 
 const listPosts = async (_, { numPage, numLimit }, { req, res }) => {
   try {
-    if (numLimit && !numPage) {
-      throw new Error("Must provide a page number if limit is provided.");
+    if ((numLimit && !numPage) || (!numLimit && numPage)) {
+      throw new Error(
+        "Must provide a page number and a limit number for pagination."
+      );
     }
 
     let query = Post.find().sort({ createdAt: -1 });
@@ -103,11 +105,20 @@ const getPost = async (_, { id }) => {
   }
 };
 
+const countPosts = async (_, args, ctx) => {
+  try {
+    return await Post.countDocuments();
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   Query: {
     listPosts,
     listPostsByUser,
     getPost,
+    countPosts,
   },
   Mutation: {
     createPost,

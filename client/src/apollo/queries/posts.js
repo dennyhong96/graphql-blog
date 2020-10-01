@@ -21,10 +21,16 @@ export const ListPostsByUser = gql`
 `;
 
 export const GetPost = gql`
-  query getPost($id: ID!) {
+  query GetPost($id: ID!) {
     getPost(id: $id) {
       ...postInfo
     }
   }
   ${PostInfo}
+`;
+
+export const CountPosts = gql`
+  query CountPosts {
+    countPosts
+  }
 `;
