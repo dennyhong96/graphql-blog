@@ -1,23 +1,47 @@
-import React, { useState, useEffect, useContext } from "react";
-import { makeStyles, fade } from "@material-ui/core/styles";
+import React, { useState, useEffect, Fragment } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import { useLazyQuery } from "@apollo/client";
+import { useHistory } from "react-router-dom";
 
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { PostSearchContext } from "../../context/postSearchResult";
 import { SearchPosts } from "../../apollo/queries/posts";
 
-const Navabr = () => {
-  const { dispatch } = useContext(PostSearchContext);
-  const [searchPosts, { data }] = useLazyQuery(SearchPosts);
+let TIMEOUT;
+
+const SearchBar = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const [searchPosts, { data }] = useLazyQuery(SearchPosts);
+  const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    if (!open) {
+      setOptions([]);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (loading) {
+      clearTimeout(TIMEOUT);
+      TIMEOUT = setTimeout(() => {
+        setLoading(false);
+      }, 750);
+    }
+    return () => {
+      if (TIMEOUT) clearTimeout(TIMEOUT);
+    };
+  }, [loading]);
 
   useEffect(() => {
     (async () => {
       if (searchText) {
+        setLoading(true);
         searchPosts({ variables: { term: searchText } });
       }
     })();
@@ -26,78 +50,66 @@ const Navabr = () => {
   // Update results upon data change
   useEffect(() => {
     if (data) {
-      dispatch({
-        type: "RESULTS_FETCHED",
-        payload: data.searchPosts,
-      });
+      setOptions(data.searchPosts);
     }
-  }, [data, dispatch]);
-
-  const handleCancel = () => {
-    setSearchText("");
-  };
+  }, [data]);
 
   return (
-    <ClickAwayListener onClickAway={handleCancel}>
-      <div className={classes.search} style={{ marginLeft: "auto" }}>
-        <div className={classes.searchIcon}>
-          <SearchIcon />
-        </div>
-        <InputBase
-          placeholder="Search…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          inputProps={{ "aria-label": "search" }}
+    <Autocomplete
+      id="search-bar"
+      style={{ width: 250 }}
+      open={open}
+      onOpen={() => {
+        setOpen(true);
+      }}
+      onClose={() => {
+        setOpen(false);
+      }}
+      getOptionSelected={(option) => {
+        history.push(`/posts/${option._id}`);
+      }}
+      getOptionLabel={(option) => option.title}
+      options={options}
+      loading={loading}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          className={classes.input}
+          label="Search..."
+          variant="standard"
           value={searchText}
-          onChange={(evt) => setSearchText(evt.target.value)}
+          onChange={(e) => setSearchText(e.target.value)}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <Fragment>
+                {loading ? (
+                  <CircularProgress style={{ color: "#fff" }} size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </Fragment>
+            ),
+            style: { borderBottom: "1px solid white", color: "#fff" },
+          }}
         />
-      </div>
-    </ClickAwayListener>
+      )}
+    />
   );
 };
 
-export default Navabr;
+export default SearchBar;
 
 const useStyles = makeStyles((theme) => ({
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+  input: {
+    marginTop: "-1.25rem",
+    "& .MuiFormLabel-root": {
+      color: "#fff",
     },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
+    "& .MuiSvgIcon-root": {
+      fill: "#fff",
     },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
+    "& .MuiInputLabel-shrink": {
+      transform: `translate(0, 7px) scale(0.75)`,
     },
   },
 }));

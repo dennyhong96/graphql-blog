@@ -17,6 +17,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import PostAddIcon from "@material-ui/icons/PostAdd";
+import GroupRoundedIcon from "@material-ui/icons/GroupRounded";
 
 import { auth } from "../../services/firebase";
 import { AuthContext } from "../../context/authContext";
@@ -83,7 +84,7 @@ const Navabr = () => {
                 component={Link}
                 to="/dashboard/create"
                 color="inherit"
-                style={{ marginLeft: "1rem" }}
+                style={{ marginLeft: "1rem", marginRight: "auto" }}
               >
                 <PostAddIcon style={{ marginRight: 1 }} />
                 <span style={{ marginTop: 3 }}>New Post</span>
@@ -92,16 +93,13 @@ const Navabr = () => {
 
             {location.pathname === "/" && <SearchBar />}
 
-            <Button
+            <IconButton
               component={Link}
               to="/users"
-              style={{
-                marginLeft: location.pathname !== "/" ? "auto" : "0.5rem",
-              }}
-              color="inherit"
+              style={{ color: "#fff", marginLeft: "0.25rem" }}
             >
-              Users
-            </Button>
+              <GroupRoundedIcon />
+            </IconButton>
 
             {!state.user ? (
               <Fragment>
