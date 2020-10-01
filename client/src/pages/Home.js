@@ -1,5 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { useQuery, useLazyQuery, useSubscription } from "@apollo/client";
+import React, { Fragment, useState } from "react";
+import { useQuery, useSubscription } from "@apollo/client";
 
 import Grid from "@material-ui/core/Grid";
 import Fade from "@material-ui/core/Fade";
@@ -11,37 +11,56 @@ import PostCardSkeleton from "../components/posts/PostCardSkeleton";
 import { ListPosts, CountPosts } from "../apollo/queries/posts";
 import { OnPostCreated } from "../apollo/subscriptions/posts";
 
-const NUM_LIMIT = 6;
+const NUM_LIMIT = 6; // Must be in sync with default NUM_LIMIT on server side listPost resolver
 
 const Home = () => {
+  const [displayPosts, setDisplayPosts] = useState([]);
   const [page, setPage] = useState(1);
-  const [posts, setPosts] = useState([]);
 
   // Subscribe to new post created
   useSubscription(OnPostCreated, {
     onSubscriptionData({ client, subscriptionData }) {
       console.log(subscriptionData);
-      setPosts((prev) => [subscriptionData.data.onPostCreated, ...prev]);
+      console.log(client);
+      const { listPosts } = client.cache.readQuery({ query: ListPosts });
+      client.cache.writeQuery({
+        query: ListPosts,
+        data: {
+          listPosts: [...listPosts, subscriptionData.data.onPostCreated],
+        },
+      });
     },
   });
 
+  // Fetch total posts count for pagination, poll every 10 seconds
   const { data: countData } = useQuery(CountPosts, { pollInterval: 10000 });
-  const [listPosts, { data: listData, error, loading }] = useLazyQuery(
-    ListPosts,
-    {
-      variables: { numPage: page, numLimit: NUM_LIMIT },
-      onCompleted(data) {
-        setPosts(data.listPosts);
-      },
+
+  // listPosts query with fetchMore
+  const { data: listData, fetchMore, error, loading } = useQuery(ListPosts, {
+    fetchPolicy: "cache-and-network", // Must for fetchMore
+    notifyOnNetworkStatusChange: true,
+    onCompleted(data) {
+      setDisplayPosts(data.listPosts);
+    },
+  });
+
+  // Handle page change
+  const handlePageChange = (_, newPage) => {
+    if (newPage !== page) {
+      setPage(newPage);
+      fetchMore({
+        variables: { numPage: newPage, numLimit: NUM_LIMIT },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          console.log({ prev });
+          console.log({ fetchMoreResult });
+          if (!fetchMoreResult) return prev;
+          return {
+            ...prev,
+            listPosts: [...prev.listPosts, ...fetchMoreResult.listPosts],
+          };
+        },
+      });
     }
-  );
-
-  useEffect(() => {
-    listPosts();
-  }, [page, listPosts]);
-
-  const handlePageChange = (_, page) => {
-    setPage(page);
   };
 
   if (error) {
@@ -74,17 +93,22 @@ const Home = () => {
               {/* Show cards */}
               {!loading &&
                 !error &&
-                posts.map((post) => (
-                  <Fade
-                    in={!loading && !error && !!listData}
-                    timeout={750}
-                    key={post._id}
-                  >
-                    <Grid item xs={12} sm={6} md={4}>
-                      <PostCard post={post} />
-                    </Grid>
-                  </Fade>
-                ))}
+                displayPosts
+                  .slice(
+                    (page - 1) * NUM_LIMIT,
+                    (page - 1) * NUM_LIMIT + NUM_LIMIT
+                  )
+                  .map((post) => (
+                    <Fade
+                      in={!loading && !error && !!listData}
+                      timeout={750}
+                      key={post._id}
+                    >
+                      <Grid item xs={12} sm={6} md={4}>
+                        <PostCard post={post} />
+                      </Grid>
+                    </Fade>
+                  ))}
             </Fragment>
           </Grid>
         </Grid>

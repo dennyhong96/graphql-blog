@@ -6,26 +6,25 @@ import {
   HttpLink,
 } from "@apollo/client";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition } from "@apollo/client/utilities";
 import { setContext } from "@apollo/client/link/context";
+import { getMainDefinition } from "@apollo/client/utilities";
 
 const httpLink = new HttpLink({
   uri: `${process.env.REACT_APP_API_URL}/graphql`,
 });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:8000/graphql`,
+  uri: `${process.env.REACT_APP_WS_URL}/graphql`,
   options: {
     reconnect: true,
   },
 });
 
 // The split function takes three parameters:
-//
 // * A function that's called for each operation to execute
 // * The Link to use for an operation if the function returns a "truthy" value
 // * The Link to use for an operation if the function returns a "falsy" value
-const splitLink = split(
+const splitedLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
     return (
@@ -37,6 +36,7 @@ const splitLink = split(
   httpLink
 );
 
+// Authorization
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem("AUTH_TOKEN");
@@ -67,6 +67,6 @@ const cleanTypeName = new ApolloLink((operation, forward) => {
 });
 
 export default new ApolloClient({
-  link: ApolloLink.from([cleanTypeName, authLink, splitLink]),
+  link: ApolloLink.from([cleanTypeName, authLink, splitedLink]),
   cache: new InMemoryCache(),
 });

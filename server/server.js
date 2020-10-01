@@ -57,6 +57,6 @@ httpServer.listen(port, () => {
     `GraphQL server is up at http://localhost:${port}${apolloServer.graphqlPath}...`
   );
   console.log(
-    `GraphQL subscriptions is up at http://localhost:${port}${apolloServer.subscriptionsPath}...`
+    `GraphQL subscriptions is up at ws://localhost:${port}${apolloServer.subscriptionsPath}...`
   );
 });

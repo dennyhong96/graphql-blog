@@ -51,7 +51,9 @@ const CreatePost = () => {
 
       try {
         // Read Query from cache (all posts)
-        const { listPosts } = cache.readQuery({ query: ListPosts });
+        const { listPosts } = cache.readQuery({
+          query: ListPosts,
+        });
         // Write mutation data to cache (all posts)
         cache.writeQuery({
           query: ListPosts,

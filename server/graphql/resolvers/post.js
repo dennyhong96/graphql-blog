@@ -2,6 +2,9 @@ const Post = require("../../models/Post");
 const User = require("../../models/User");
 const auth = require("../../middlewares/auth");
 
+let NUM_LIMIT = 6;
+let NUM_PAGE = 1;
+
 // Constants for pubSub event trigger
 const POST_CREATED = "POST_CREATED";
 
@@ -13,10 +16,10 @@ const listPosts = async (_, { numPage, numLimit }, { req, res }) => {
       );
     }
 
-    let query = Post.find().sort({ createdAt: -1 });
-    if (numLimit) {
-      query = query.skip((numPage - 1) * numLimit).limit(numLimit);
-    }
+    const query = Post.find()
+      .skip(((numPage || NUM_PAGE) - 1) * (numLimit || NUM_LIMIT))
+      .limit(numLimit || NUM_LIMIT)
+      .sort({ createdAt: -1 });
 
     const posts = await query;
     return posts;
